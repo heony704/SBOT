@@ -4,55 +4,64 @@ const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const userList = new Map();
-const goalHour = 3;
+let goalHour = 6;
 
 const help = require('./commands/help');
 const { start, pause } = require('./commands/stopwatch');
 const hours = require('./commands/totaltime');
-const dailySummary = require('./commands/summary');
+const { setSummary, clearSummary } = require('./commands/summary');
 const { whatDate } = require('./commands/convertTime');
+const setGoal = require('./commands/setGoal');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
 client.on('messageCreate', message => {
+    if (message.author.bot) return;
+
     const content = message.content.toLowerCase();
+    const args = content.split(' ');
+    const command = args.shift();
+
+    if (command === 'setgoal' && args.length === 1){
+        goalHour = setGoal(message.channel, args);
+    }
 
     switch (content) {
         case 'help':
             help(message.channel);
             break;
+
         case 'start':
         case 's':
-        case 'ㄴ':
             start(message, userList);
             break;
+
         case 'pause':
         case 'p':
-        case 'ㅔ':
             pause(message, userList);
             break;
+
         case 'hours':
         case 'h':
-        case 'ㅗ':
             hours(message, userList);
             break;
+
         case 'today':
         case 't':
-        case 'ㅅ':
             message.channel.send(`오늘은 ${whatDate(new Date())} 입니다.`);
             break;
+
         case 'goal':
         case 'g':
-        case 'ㅎ':
-            const comment = `목표 공부시간은 **${goalHour}**시간입니다.`;
+            const comment = `목표 공부시간은 **${goalHour}시간**입니다.`;
             message.channel.send(comment);
             break;
-    }
 
-    if (content === 'set daily summary here') {
-        dailySummary(message.channel, userList, goalHour);
+        case 'set daily summary here':
+            setSummary(message.channel, userList, goalHour);
+            break;
     }
 });
 

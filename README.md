@@ -1,3 +1,6 @@
+<style>
+ p { max-height: 50px; }
+</style>
 
 <p align="center" max-height="230px"><img src="https://user-images.githubusercontent.com/36994104/132230666-31fbfd2f-0874-4992-b7e1-b269f7ad76c6.png"></p>
  

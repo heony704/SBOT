@@ -4,28 +4,28 @@
 - 오늘 하루 총 공부 시간을 기록하기
 - 목표 시간을 정해서 공부하기
 
-# 시작하기
-## 1. 원격 저장소를 복제한 뒤 모듈을 설치한다.
+## 시작하기
+### 1. 원격 저장소를 복제한 뒤 모듈을 설치한다.
 ```bash
 git clone https://github.com/SeungHe0n/SBOT.git
 cd SBOT
 npm install
 ```
 
-## 2. config.json 파일을 만들어 디스코드에서 발급받은 봇 토큰을 입력한다.
+### 2. config.json 파일을 만들어 디스코드에서 발급받은 봇 토큰을 입력한다.
 ```json
 {
     "TOKEN" : "EnterYourBotTokenHere"
 }
 ```
 
-## 3. 다음 명령어를 실행하면 봇이 시작한다.
+### 3. 다음 명령어를 실행하면 봇이 시작한다.
 ```bash
 npm start
 ```
 
-# 명령어
-## 일반 명령어
+## 명령어
+### 일반 명령어
 - `help`  
 사용할 수 있는 명령어를 알려줍니다.  
 - `start` , `s`  
@@ -39,7 +39,7 @@ npm start
 - `goal` , `g`  
 목표 공부시간을 알려줍니다.
 
-## 관리 명령어
+### 관리 명령어
 - `setgoal [hours]`  
 [hours]를 목표 공부시간으로 설정합니다. 기본값은 6으로 설정되어 있습니다.
 - `set daily summary`  
@@ -47,9 +47,9 @@ npm start
 - `clear daily summary`  
 명령어를 입력한 채널의 **하루 공부시간 요약**을 해제합니다.
 
-# 사용하기
+## 사용하기
 
-# 서버
+## 서버
 서버구축중
 
 ---

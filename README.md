@@ -30,7 +30,7 @@ npm start
 ### 일반 명령어
 - `help`  
 사용할 수 있는 명령어를 알려줍니다.  
-<div style='line-height:200%'></div>
+<div style='line-height:200%'></div>  
 - `start` , `s`  
 스톱워치를 시작합니다.  
 - `pause` , `p`  

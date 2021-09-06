@@ -54,7 +54,7 @@ npm start
 <br>
 
 ## 사용하기
-![test1](https://user-images.githubusercontent.com/36994104/132228126-86844ec7-f3d8-42c6-b874-88e2215e43f4.gif)
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/132228126-86844ec7-f3d8-42c6-b874-88e2215e43f4.gif" height="200"></p>
 <br>
 
 ## 서버

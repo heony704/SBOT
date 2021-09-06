@@ -1,28 +1,28 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/36994104/132232093-7b2a5a62-b2d9-4250-9970-baa9703dc23f.png"></p>
  
 # SBOT
-공부 시간을 관리하는 디스코드 봇입니다. 다음과 같은 기능을 사용할 수 있습니다.
+공부 시간을 측정하는 디스코드 봇입니다. 다음과 같은 기능을 사용할 수 있습니다.
  - 스톱워치를 사용하여 공부 시간 체크하기
  - 오늘 하루 총 공부 시간을 기록하기
  - 목표 시간을 정해서 공부하기  
 <br>
 
 ## 시작하기
-1. 원격 저장소를 복제한 뒤 모듈을 설치한다.
+1. 원격 저장소를 복제한 뒤 모듈을 설치합니다.
 ```bash
 git clone https://github.com/SeungHe0n/SBOT.git
 cd SBOT
 npm install
 ```
 
-2. config.json 파일을 만들어 디스코드에서 발급받은 봇 토큰을 입력한다.
+2. config.json 파일을 만들어 디스코드에서 발급받은 봇 토큰을 입력합니다.
 ```json
 {
     "TOKEN" : "EnterYourBotTokenHere"
 }
 ```
 
-3. 다음 명령어를 실행하면 봇이 시작한다.
+3. 다음 명령어를 실행하면 봇이 시작합니다.
 ```bash
 npm start
 ```

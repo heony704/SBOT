@@ -4,6 +4,7 @@ const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const userList = new Map();
+const intervalList = new Map();
 let goalHour = 6;
 
 const help = require('./commands/help');
@@ -46,6 +47,7 @@ client.on('messageCreate', message => {
         case 'hours':
         case 'h':
             hours(message, userList);
+            console.log( userList );
             break;
 
         case 'today':
@@ -59,8 +61,19 @@ client.on('messageCreate', message => {
             message.channel.send(comment);
             break;
 
-        case 'set daily summary here':
-            setSummary(message.channel, userList, goalHour);
+        case 'set daily summary':
+            setSummary(message, intervalList, userList, goalHour);
+            // if (!intervalList.has(message.channelId)) {
+            //     const interval = setSummary(message.channel, userList, goalHour);
+            //     intervalList.set(message.channelId, interval);
+            // } else {
+            //     const comment = `이미 **하루 공부시간 요약**이 설정된 채널입니다.`;
+            //     message.channel.send(comment);
+            // }
+            break;
+
+        case 'clear daily summary':
+            clearSummary(message, intervalList);
             break;
     }
 });

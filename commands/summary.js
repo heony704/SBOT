@@ -9,50 +9,65 @@ const matchDate = function (date) {
     return (date.getDate() === new Date().getDate());
 }
 
-const summary = function (channel, userList, goalHour) {
-    // matchDate, matchTime 변경
-    if (!matchDate(time)) {
-        let comment = `:mega:  ${whatDate(time)}\n`;
-        const now = new Date();
-        
-        userList.forEach((user, id) => {
-            if (user.startTime) {
-                user.totalTime.setTime(user.totalTime.getTime() + (now.getTime() - user.startTime.getTime()));
-                user.startTime = now;
-            }
-            
-            comment += `<@${id}> `;
-            if (user.totalTime.getHours() >= goalHour) {
-                comment += `${howlong(user.totalTime)}  :thumbsup:\n`;
-            } else {
-                comment += `${howlong(user.totalTime)}  :bricks:\n`;
-            }
-            user.totalTime = new Date(2021, 0);
-        });
-        
-        channel.send(comment);
+const setSummary = function (message, intervalList, userList, goalHour) {
 
-        // 시간 초기화
-        time.setDate(now.getDate());
+    if (intervalList.has(message.channelId)) {
+        const comment = `이미 **하루 공부시간 요약**이 설정된 채널입니다.`;
+        message.channel.send(comment);
+        return ;
     }
-}
 
-const setSummary = function (channel, userList, goalHour) {
-
-    let comment = `해당 채널에 [ 하루 공부시간 요약 ]이 설정되었습니다.\n`;
+    let comment = `해당 채널에 **하루 공부시간 요약**이 설정되었습니다.\n`;
     comment += `목표 시간을 달성하면 따봉:thumbsup: 을 , 달성하지 못한다면 벽돌:bricks: 을 받습니다.`
-    channel.send(comment);
+    message.channel.send(comment);
 
     const time = new Date();
 
-    setInterval(function() { summary(channel, userList, goalHour) }, 900);
+    const interval = setInterval( function () {
+
+        // matchDate, matchTime 변경
+        if (!matchTime(time)) {
+        // if (!matchDate(time)) {
+
+            let comment = `:mega:  ${whatDate(time)}\n`;
+            const now = new Date();
+            
+            if ( userList.size === 0 ) {
+                comment += `- 아직 참여한 사용자가 없습니다 -`;
+                message.channel.send(comment);
+            } else {
+                userList.forEach((user, id) => {
+                    if (user.startTime) {
+                        user.totalTime.setTime(user.totalTime.getTime() + (now.getTime() - user.startTime.getTime()));
+                        user.startTime = now;
+                    }
+
+                    comment += `<@${id}> `;
+                    if (user.totalTime.getHours() >= goalHour) {
+                        comment += `${howlong(user.totalTime)}  :thumbsup:\n`;
+                    } else {
+                        comment += `${howlong(user.totalTime)}  :bricks:\n`;
+                    }
+                    user.totalTime = new Date(2021, 0);
+                });
+            
+                message.channel.send(comment);
+            }
+            
+            // 시간 초기화
+            time.setMinutes(now.getMinutes());
+            // time.setDate(now.getDate());
+        }
+    }, 900);
+    
+    intervalList.set(message.channelId, interval);
 }
 
-const clearSummary = function (channel) {
-    let comment = `해당 채널에 설정된 [ 하루 공부시간 요약 ]이 해제되었습니다.`;
-    channel.send(comment);
-
-    clearInterval(summary);
+const clearSummary = function (message, intervalList) {
+    clearInterval(intervalList.get(message.channelId));
+    intervalList.delete(message.channelId);
+    const comment = `**하루 공부시간 요약**이 해제되었습니다.`;
+    message.channel.send(comment);
 }
 
 module.exports = { setSummary, clearSummary };

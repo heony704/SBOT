@@ -8,7 +8,6 @@ const start = function (message, userList) {
         }
         userList.set(message.author.id, userInfo);
     }
-    console.log(userList);
 
     let user = userList.get(message.author.id);
 

@@ -63,13 +63,6 @@ client.on('messageCreate', message => {
 
         case 'set daily summary':
             setSummary(message, intervalList, userList, goalHour);
-            // if (!intervalList.has(message.channelId)) {
-            //     const interval = setSummary(message.channel, userList, goalHour);
-            //     intervalList.set(message.channelId, interval);
-            // } else {
-            //     const comment = `이미 **하루 공부시간 요약**이 설정된 채널입니다.`;
-            //     message.channel.send(comment);
-            // }
             break;
 
         case 'clear daily summary':

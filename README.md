@@ -5,21 +5,21 @@
  - 목표 시간을 정해서 공부하기  
 <br><br>
 ## 시작하기
-### 1. 원격 저장소를 복제한 뒤 모듈을 설치한다.
+1. 원격 저장소를 복제한 뒤 모듈을 설치한다.
 ```bash
 git clone https://github.com/SeungHe0n/SBOT.git
 cd SBOT
 npm install
 ```
 
-### 2. config.json 파일을 만들어 디스코드에서 발급받은 봇 토큰을 입력한다.
+2. config.json 파일을 만들어 디스코드에서 발급받은 봇 토큰을 입력한다.
 ```json
 {
     "TOKEN" : "EnterYourBotTokenHere"
 }
 ```
 
-### 3. 다음 명령어를 실행하면 봇이 시작한다.
+3. 다음 명령어를 실행하면 봇이 시작한다.
 ```bash
 npm start
 ```
@@ -28,17 +28,22 @@ npm start
 ### 일반 명령어
 - `help`  
 사용할 수 있는 명령어를 알려줍니다.  
+<br>
 - `start` , `s`  
 스톱워치를 시작합니다.
+<br>
 - `pause` , `p`  
 스톱워치를 멈춥니다.
+<br>
 - `hours` , `h`  
 하루동안 스톱워치를 사용하여 얼마나 공부했는지 알려줍니다.
+<br>
 - `today` , `t`  
 오늘의 날짜를 알려줍니다.
+<br>
 - `goal` , `g`  
 목표 공부시간을 알려줍니다.
-
+<br>
 ### 관리 명령어
 - `setgoal [hours]`  
 [hours]를 목표 공부시간으로 설정합니다. 기본값은 6으로 설정되어 있습니다.

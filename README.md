@@ -1,5 +1,5 @@
 
-<p align="center" max-height="230px"><img src="https://user-images.githubusercontent.com/36994104/132230666-31fbfd2f-0874-4992-b7e1-b269f7ad76c6.png" height="230px"></p>
+<p align="center" max-height="230px"><img src="https://user-images.githubusercontent.com/36994104/132230666-31fbfd2f-0874-4992-b7e1-b269f7ad76c6.png"></p>
  
 # SBOT
 공부 시간을 관리하는 디스코드 봇입니다. 다음과 같은 기능을 사용할 수 있습니다.

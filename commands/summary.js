@@ -6,8 +6,8 @@ const matchTime = function (time) {
     return (time.getHours() === now.getHours() && time.getMinutes() === now.getMinutes());
 }
 const matchDate = function (date) {
-    const now = new Date();
-    return (date.getMinutes() === now.getMinutes());
+    // const now = new Date();
+    return (date.getMinutes() === new Date().getMinutes());
 }
 
 const setSummary = function (message, intervalList, userList, goalHour) {

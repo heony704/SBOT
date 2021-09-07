@@ -47,7 +47,6 @@ client.on('messageCreate', message => {
         case 'hours':
         case 'h':
             hours(message, userList);
-            console.log( userList );
             break;
 
         case 'today':
@@ -68,7 +67,7 @@ client.on('messageCreate', message => {
         case 'clear daily summary':
             clearSummary(message, intervalList);
             break;
-            
+
         case 'console userList':
             console.log(userList);
             break;

@@ -6,7 +6,8 @@ const matchTime = function (time) {
     return (time.getHours() === now.getHours() && time.getMinutes() === now.getMinutes());
 }
 const matchDate = function (date) {
-    return (date.getDate() === new Date().getDate());
+    const now = new Date();
+    return (date.getMinutes() === now.getMinutes());
 }
 
 const setSummary = function (message, intervalList, userList, goalHour) {
@@ -55,8 +56,8 @@ const setSummary = function (message, intervalList, userList, goalHour) {
             }
             
             // 시간 초기화
-            // time.setMinutes(now.getMinutes());
-            time.setDate(now.getDate());
+            time.setMinutes(now.getMinutes());
+            // time.setDate(now.getDate());
         }
     }, 900);
     

@@ -56,9 +56,5 @@ npm start
 <p align="center"><img src="https://user-images.githubusercontent.com/36994104/132228126-86844ec7-f3d8-42c6-b874-88e2215e43f4.gif"></p>
 <br>
 
-## 서버
-서버구축중
-
-
 ---
 ![badge](https://img.shields.io/badge/%EC%A0%9C%EC%9E%91%EA%B8%B0%EA%B0%84-21.08.31%20~%2021.09.06-yellow)

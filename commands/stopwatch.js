@@ -1,6 +1,5 @@
 
 const start = function (message, userList) {
-    console.log(userList);
     if (!userList.has(message.author.id)) {
         const userInfo = {
             startTime: null,

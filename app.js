@@ -68,10 +68,10 @@ client.on('messageCreate', message => {
             clearSummary(message, intervalList);
             break;
 
-        case 'console userList':
+        case 'console userlist':
             console.log(userList);
             break;
-        case 'console intervalList':
+        case 'console intervallist':
             console.log(intervalList);
             break;
     }

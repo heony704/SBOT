@@ -26,8 +26,8 @@ const setSummary = function (message, intervalList, userList, goalHour) {
     const interval = setInterval( function () {
 
         // matchDate, matchTime 변경
-        if (!matchTime(time)) {
-        // if (!matchDate(time)) {
+        // if (!matchTime(time)) {
+        if (!matchDate(time)) {
 
             let comment = `:mega:  ${whatDate(time)}\n`;
             const now = new Date();
@@ -55,8 +55,8 @@ const setSummary = function (message, intervalList, userList, goalHour) {
             }
             
             // 시간 초기화
-            time.setMinutes(now.getMinutes());
-            // time.setDate(now.getDate());
+            // time.setMinutes(now.getMinutes());
+            time.setDate(now.getDate());
         }
     }, 900);
     

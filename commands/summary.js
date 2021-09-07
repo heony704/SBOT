@@ -1,13 +1,9 @@
 
 const { when, howlong, whatDate } = require('./convertTime');
 
-const matchTime = function (time) {
-    const now = new Date();
-    return (time.getHours() === now.getHours() && time.getMinutes() === now.getMinutes());
-}
 const matchDate = function (date) {
     // const now = new Date();
-    return (date.getMinutes() === new Date().getMinutes());
+    return (date.getHours() === new Date().getHours());
 }
 
 const setSummary = function (message, intervalList, userList, goalHour) {
@@ -56,7 +52,7 @@ const setSummary = function (message, intervalList, userList, goalHour) {
             }
             
             // 시간 초기화
-            time.setMinutes(now.getMinutes());
+            time.setHours(now.getHours());
             // time.setDate(now.getDate());
         }
     }, 900);

@@ -3,7 +3,7 @@ const { when, howlong, whatDate } = require('./convertTime');
 
 const matchDate = function (date) {
     // const now = new Date();
-    return (date.getHours() === new Date().getHours());
+    return (date.getDate() === new Date().getDate());
 }
 
 const setSummary = function (message, intervalList, userList, goalHour) {

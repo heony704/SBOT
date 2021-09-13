@@ -1,9 +1,6 @@
 
 const { when, howlong, whatDate } = require('./convertTime');
-
-const matchTime = function (date) {
-    return (date.getMinutes() === new Date().getMinutes());
-}
+const schedule = require('node-schedule');
 
 const setSummary = function (message, intervalList, userList, goalHour) {
 
@@ -19,52 +16,51 @@ const setSummary = function (message, intervalList, userList, goalHour) {
 
     const time = new Date();
 
-    const interval = setInterval( function () {
-
-        if (!matchTime(time)) {
-
-            const now = new Date();
-            
-            if (time.getMinutes() === 59 && time.getHours() === 14) {
-
-                let comment = `:mega:  ${whatDate(time)}\n`;
-                
-                if ( userList.size === 0 ) {
-                    comment += `- 아직 참여한 사용자가 없습니다 -`;
-                    message.channel.send(comment);
-                } else {
-                    userList.forEach((user, id) => {
-                        if (user.startTime) {
-                            user.totalTime.setTime(user.totalTime.getTime() + (now.getTime() - user.startTime.getTime()));
-                            user.startTime = now;
-                        }
-
-                        comment += `<@${id}> `;
-                        if (user.totalTime.getHours() >= goalHour) {
-                            comment += `${howlong(user.totalTime)}  :thumbsup:\n`;
-                        } else {
-                            comment += `${howlong(user.totalTime)}  :bricks:\n`;
-                        }
-                        user.totalTime = new Date(2021, 0);
-                    });
-                
-                    message.channel.send(comment);
+    const summary = function () {
+        const now = new Date();
+        
+        let comment = `:mega:  ${whatDate(time)}\n`;
+        
+        if ( userList.size === 0 ) {
+            comment += `- 아직 참여한 사용자가 없습니다 -`;
+            message.channel.send(comment);
+        } else {
+            userList.forEach((user, id) => {
+                if (user.startTime) {
+                    user.totalTime.setTime(user.totalTime.getTime() + (now.getTime() - user.startTime.getTime()));
+                    user.startTime = now;
                 }
-            }
 
-            // 시간 초기화
-            time.setTime(now.getTime());
+                comment += `<@${id}> `;
+                if (user.totalTime.getHours() >= goalHour) {
+                    comment += `${howlong(user.totalTime)}  :thumbsup:\n`;
+                } else {
+                    comment += `${howlong(user.totalTime)}  :bricks:\n`;
+                }
+                user.totalTime = new Date(2021, 0);
+            });
+        
+            message.channel.send(comment);
         }
-    }, 900);
+        console.log(new Date());
+    }
+
+    const job = schedule.scheduleJob('0 0/2 * * * *', summary);
     
-    intervalList.set(message.channelId, interval);
+    intervalList.set(message.channelId, job);
 }
 
 const clearSummary = function (message, intervalList) {
-    clearInterval(intervalList.get(message.channelId));
-    intervalList.delete(message.channelId);
-    const comment = `**하루 공부시간 요약**이 해제되었습니다.`;
-    message.channel.send(comment);
+    if (intervalList.has(message.channelId)) {
+        schedule.cancelJob(intervalList.get(message.channelId));
+        intervalList.delete(message.channelId);
+        const comment = `**하루 공부시간 요약**이 해제되었습니다.`;
+        message.channel.send(comment);
+    } else {
+        const comment =`해당 채널에 **하루 공부시간 요약**이 설정되지 않았습니다.`;
+        message.channel.send(comment);
+    }
+    
 }
 
 module.exports = { setSummary, clearSummary };

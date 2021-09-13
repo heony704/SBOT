@@ -2,10 +2,6 @@
 const { when, howlong, whatDate } = require('./convertTime');
 const schedule = require('node-schedule');
 
-const matchTime = function (date) {
-    return (date.getMinutes() === new Date().getMinutes());
-}
-
 const setSummary = function (message, intervalList, userList, goalHour) {
 
     if (intervalList.has(message.channelId)) {
@@ -49,16 +45,22 @@ const setSummary = function (message, intervalList, userList, goalHour) {
         console.log(new Date());
     }
 
-    const job = schedule.scheduleJob('0 0 15 * * *', summary);
+    const job = schedule.scheduleJob('0 0/2 * * * *', summary);
     
     intervalList.set(message.channelId, job);
 }
 
 const clearSummary = function (message, intervalList) {
-    schedule.cancelJob(intervalList.get(message.channelId));
-    intervalList.delete(message.channelId);
-    const comment = `**하루 공부시간 요약**이 해제되었습니다.`;
-    message.channel.send(comment);
+    if (intervalList.has(message.channelId)) {
+        schedule.cancelJob(intervalList.get(message.channelId));
+        intervalList.delete(message.channelId);
+        const comment = `**하루 공부시간 요약**이 해제되었습니다.`;
+        message.channel.send(comment);
+    } else {
+        const comment =`해당 채널에 **하루 공부시간 요약**이 설정되지 않았습니다.`;
+        message.channel.send(comment);
+    }
+    
 }
 
 module.exports = { setSummary, clearSummary };

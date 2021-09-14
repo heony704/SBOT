@@ -27,7 +27,19 @@ client.on('messageCreate', message => {
     const command = args.shift();
 
     if (command === 'setgoal' && args.length === 1){
-        goalHour = setGoal(message.channel, args);
+        const hour = parseInt(args.at(0));
+        console.log(hour);
+        if (hour && hour > 0 ) {
+            goalHour = hour;
+            const comment = `목표 공부시간이 **${goalHour}시간**으로 변경되었습니다.`;
+            message.channel.send(comment);
+            
+        } else {
+            const comment = `목표 공부시간을 자연수로 입력해주세요.`;
+            message.channel.send(comment);
+        }
+            console.log(typeof hour);
+        
     }
 
     switch (content) {

@@ -13,7 +13,6 @@ const { start, pause } = require('./commands/stopwatch');
 const hours = require('./commands/totaltime');
 const { setSummary, clearSummary } = require('./commands/summary');
 const { whatDate } = require('./commands/convertTime');
-const setGoal = require('./commands/setGoal');
 
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
@@ -26,20 +25,16 @@ client.on('messageCreate', message => {
     const args = content.split(' ');
     const command = args.shift();
 
-    if (command === 'setgoal' && args.length === 1){
+    if (command === 'setgoal' && args.length === 1) {
         const hour = parseInt(args.at(0));
-        console.log(hour);
         if (hour && hour > 0 ) {
             goalHour = hour;
             const comment = `목표 공부시간이 **${goalHour}시간**으로 변경되었습니다.`;
             message.channel.send(comment);
-            
         } else {
             const comment = `목표 공부시간을 자연수로 입력해주세요.`;
             message.channel.send(comment);
         }
-            console.log(typeof hour);
-        
     }
 
     switch (content) {

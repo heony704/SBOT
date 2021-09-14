@@ -2,13 +2,7 @@
 const { when, howlong, whatDate } = require('./convertTime');
 const schedule = require('node-schedule');
 
-const setSummary = function (message, intervalList, userList, goalHour) {
-
-    if (intervalList.has(message.channelId)) {
-        const comment = `이미 **하루 공부시간 요약**이 설정된 채널입니다.`;
-        message.channel.send(comment);
-        return ;
-    }
+const setSummary = function (message, userList, goalHour) {
 
     let comment = `해당 채널에 **하루 공부시간 요약**이 설정되었습니다.\n`;
     comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`
@@ -47,20 +41,13 @@ const setSummary = function (message, intervalList, userList, goalHour) {
 
     const job = schedule.scheduleJob('0 0/2 * * * *', summary);
     
-    intervalList.set(message.channelId, job);
+    return job;
 }
 
-const clearSummary = function (message, intervalList) {
-    if (intervalList.has(message.channelId)) {
-        schedule.cancelJob(intervalList.get(message.channelId));
-        intervalList.delete(message.channelId);
-        const comment = `**하루 공부시간 요약**이 해제되었습니다.`;
-        message.channel.send(comment);
-    } else {
-        const comment =`해당 채널에 **하루 공부시간 요약**이 설정되지 않았습니다.`;
-        message.channel.send(comment);
-    }
-    
+const clearSummary = function (message, summaryJob) {
+    schedule.cancelJob(summaryJob);
+    const comment = `**하루 공부시간 요약**이 해제되었습니다.`;
+    message.channel.send(comment);
 }
 
 module.exports = { setSummary, clearSummary };

@@ -4,7 +4,8 @@ const { Client, Intents } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const userList = new Map();
-const intervalList = new Map();
+let summaryChannel = null;
+let summaryJob = null;
 let goalHour = 6;
 
 const help = require('./commands/help');
@@ -61,18 +62,39 @@ client.on('messageCreate', message => {
             break;
 
         case 'set daily summary':
-            setSummary(message, intervalList, userList, goalHour);
+            if (!summaryJob && !summaryChannel) {
+                summaryJob = setSummary(message, userList, goalHour);
+                summaryChannel = message.channelId;
+            } else if (summaryChannel === message.channelId) {
+                const comment = `이미 **하루 정리**가 설정된 채널입니다.`;
+                message.channel.send(comment);
+            } else {
+                const comment = `**하루 정리**가 설정된 다른 채널이 있습니다.`;
+                message.channel.send(comment);
+            }
             break;
 
         case 'clear daily summary':
-            clearSummary(message, intervalList);
+            if (summaryJob) {
+                if (summaryChannel === message.channelId) {
+                    clearSummary(message, summaryJob);
+                    summaryJob = null;
+                    summaryChannel = null;
+                } else {
+                    const comment = `다른 채널의 **하루 정리**를 해제할 수 없습니다.`;
+                    message.channel.send(comment);
+                }
+            }
             break;
 
         case 'console userlist':
             console.log(userList);
             break;
-        case 'console intervallist':
-            console.log(intervalList);
+        case 'console summaryjob':
+            console.log(summaryJob);
+            break;
+        case 'console summarychannel':
+            console.log(summaryChannel);
             break;
     }
 });

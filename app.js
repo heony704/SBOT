@@ -8,6 +8,12 @@ let summaryChannel = null;
 let summaryJob = null;
 let goalHour = 6;
 
+const shortList = new Map();
+shortList.set('start', ['start', 's']);
+shortList.set('pause', ['pause', 'p']);
+shortList.set('hours', ['hours', 'h']);
+shortList.set('goal', ['goal', 'g']);
+
 const help = require('./commands/help');
 const { start, pause } = require('./commands/stopwatch');
 const hours = require('./commands/totaltime');
@@ -56,73 +62,89 @@ client.on('messageCreate', message => {
         }
     } 
 
-    switch (content) {
-        case 'help':
-            help(message.channel);
-            break;
-
-        case 'start':
-        case 's':
-            start(message, userList);
-            break;
-
-        case 'pause':
-        case 'p':
-            pause(message, userList);
-            break;
-
-        case 'hours':
-        case 'h':
-            hours(message, userList);
-            break;
-
-        case 'today':
-        case 't':
-            message.channel.send(`오늘은 ${whatDate(new Date())} 입니다.`);
-            break;
-
-        case 'goal':
-        case 'g':
-            const comment = `목표 공부시간은 **${goalHour}시간**입니다.`;
-            message.channel.send(comment);
-            break;
-
-        case 'set daily summary':
-            if (!summaryJob && !summaryChannel) {
-                summaryJob = setSummary(message, userList, goalHour);
-                summaryChannel = message.channelId;
-            } else if (summaryChannel === message.channelId) {
-                const comment = `이미 **하루 정리**가 설정된 채널입니다.`;
-                message.channel.send(comment);
-            } else {
-                const comment = `**하루 정리**가 설정된 다른 채널이 있습니다.`;
-                message.channel.send(comment);
-            }
-            break;
-
-        case 'clear daily summary':
-            if (summaryJob) {
-                if (summaryChannel === message.channelId) {
-                    clearSummary(message, summaryJob);
-                    summaryJob = null;
-                    summaryChannel = null;
-                } else {
-                    const comment = `다른 채널의 **하루 정리**를 해제할 수 없습니다.`;
-                    message.channel.send(comment);
-                }
-            }
-            break;
-
-        case 'console userlist':
-            console.log(userList);
-            break;
-        case 'console summaryjob':
-            console.log(summaryJob);
-            break;
-        case 'console summarychannel':
-            console.log(summaryChannel);
-            break;
+    if (content === 'help') {
+        help(message.channel);
     }
+    
+    if (shortList.get('start').includes(content)) {
+        start(message, userList);
+    }
+
+    if (shortList.get('pause').includes(content)) {
+        pause(message, userList);
+    }
+
+    if (shortList.get('hours').includes(content)) {
+        hours(message, userList);
+    }
+
+    if (content === 'today') {
+        message.channel.send(`오늘은 ${whatDate(new Date())} 입니다.`);
+    }
+
+    if (shortList.get('goal').includes(content)) {
+        const comment = `목표 공부시간은 **${goalHour}시간**입니다.`;
+        message.channel.send(comment);
+    }
+    
+    if (content === 'set daily summary') {
+        if (!summaryJob && !summaryChannel) {
+            summaryJob = setSummary(message, userList, goalHour);
+            summaryChannel = message.channelId;
+        } else if (summaryChannel === message.channelId) {
+            const comment = `이미 **하루 정리**가 설정된 채널입니다.`;
+            message.channel.send(comment);
+        } else {
+            const comment = `**하루 정리**가 설정된 다른 채널이 있습니다.`;
+            message.channel.send(comment);
+        }
+    }
+
+    if (content === 'clear daily summary') {
+        if (summaryJob) {
+            if (summaryChannel === message.channelId) {
+                clearSummary(message, summaryJob);
+                summaryJob = null;
+                summaryChannel = null;
+            } else {
+                const comment = `다른 채널의 **하루 정리**를 해제할 수 없습니다.`;
+                message.channel.send(comment);
+            }
+        }
+    }
+
+    if (content === 'set korean command') {
+        shortList.get('start').push('ㄴ');
+        shortList.get('pause').push('ㅔ');
+        shortList.get('hours').push('ㅗ');
+        shortList.get('goal').push('ㅎ');
+        const comment = `지금부터 한글 명령어 \`ㄴ\` , \`ㅔ\` , \`ㅗ\` , \`ㅎ\` 가 작동합니다.\n`;
+        message.channel.send(comment);
+    }
+
+    if (content === 'clear korean command') {
+        shortList.get('start').pop();
+        shortList.get('pause').pop();
+        shortList.get('hours').pop();
+        shortList.get('goal').pop();
+        const comment = `지금부터 한글 명령어가 작동하지 않습니다.`;
+        message.channel.send(comment);
+    }
+
+    if (content === 'console userlist') {
+        console.log(userList);
+    }
+
+    if (content === 'console summaryjob') {
+        console.log(summaryJob);
+    }
+
+    if (content === 'console summarychannel') {
+        console.log(summaryChannel);
+    }
+
 });
 
 client.login(config.TOKEN);
+
+module.exports = shortList;

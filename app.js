@@ -24,6 +24,14 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
 });
 
+client.on('channelDelete', channel => {
+    if (channel.id === summaryChannel) {
+        clearSummary(summaryJob);
+        summaryJob = null;
+        summaryChannel = null;
+    }
+});
+
 client.on('messageCreate', message => {
     if (message.author.bot) return;
 
@@ -103,9 +111,11 @@ client.on('messageCreate', message => {
     if (content === 'clear daily summary') {
         if (summaryJob) {
             if (summaryChannel === message.channelId) {
-                clearSummary(message, summaryJob);
+                clearSummary(summaryJob);
                 summaryJob = null;
                 summaryChannel = null;
+                const comment = `**하루 정리**가 해제되었습니다.`;
+                message.channel.send(comment);
             } else {
                 const comment = `다른 채널의 **하루 정리**를 해제할 수 없습니다.`;
                 message.channel.send(comment);

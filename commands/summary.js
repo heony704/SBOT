@@ -36,10 +36,9 @@ const setSummary = function (message, userList, goalHour) {
         
             message.channel.send(comment);
         }
-        console.log(new Date());
     }
 
-    const job = schedule.scheduleJob('0 28 * * * *', summary);
+    const job = schedule.scheduleJob('0 29 * * * *', summary);
     
     return job;
 }
@@ -52,19 +51,13 @@ const resetSummary = function (summaryJob, hour, min) {
         correctHour = hour + 15;
     }
     const cron = `0 ${min} ${correctHour} * * *`;
-    console.log(cron);
-
     const job = schedule.rescheduleJob(summaryJob, cron);
-
-    console.log(job);
 
     return job;
 }
 
-const clearSummary = function (message, summaryJob) {
+const clearSummary = function (summaryJob) {
     schedule.cancelJob(summaryJob);
-    const comment = `**하루 정리**가 해제되었습니다.`;
-    message.channel.send(comment);
 }
 
 module.exports = { setSummary, resetSummary, clearSummary };

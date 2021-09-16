@@ -21,7 +21,7 @@ const { setSummary, resetSummary, clearSummary } = require('./commands/summary')
 const { whatDate } = require('./commands/convertTime');
 
 client.on('ready', () => {
-    console.log(`Logged in as ${client.user.tag}!`);
+    console.log(`bot ${client.user.tag} is Ready !`);
 });
 
 client.on('channelDelete', channel => {
@@ -69,6 +69,21 @@ client.on('messageCreate', message => {
             message.channel.send(comment);
         }
     } 
+
+    if (content === 'init') {
+        message.guild.channels.create('공부-채널', { type: 'GUILD_CATEGORY'});
+        const studyCategory = message.guild.channels.cache.find(c => c.name == '공부-채널' && c.type == 'GUILD_CATEGORY');
+        message.guild.channels.create('출석-체크', { type: 'GUILD_TEXT', parent: studyCategory.id});
+        message.guild.channels.create('시간-체크', { type: 'GUILD_TEXT', parent: studyCategory.id});
+        message.guild.channels.create('하루-체크', { type: 'GUILD_TEXT', parent: studyCategory.id});
+        message.guild.channels.create('캠-스터디', { type: 'GUILD_VOICE', parent: studyCategory.id});
+
+        message.guild.channels.create('SBOT', { type: 'GUILD_CATEGORY'});
+        const sbotCategory = message.guild.channels.cache.find(c => c.name == 'SBOT' && c.type == 'GUILD_CATEGORY');
+        message.guild.channels.create('봇-안내', { type: 'GUILD_TEXT', parent: sbotCategory.id});
+        message.guild.channels.create('봇-관리', { type: 'GUILD_TEXT', parent: sbotCategory.id});
+
+    }
 
     if (content === 'help') {
         help(message.channel);
@@ -155,6 +170,7 @@ client.on('messageCreate', message => {
 
 });
 
-client.login(config.TOKEN);
-
-module.exports = shortList;
+client.login(config.TOKEN)
+    .then( function () {
+        console.log('client login');
+    });

@@ -71,18 +71,26 @@ client.on('messageCreate', message => {
     } 
 
     if (content === 'init') {
-        message.guild.channels.create('공부-채널', { type: 'GUILD_CATEGORY'});
-        const studyCategory = message.guild.channels.cache.find(c => c.name == '공부-채널' && c.type == 'GUILD_CATEGORY');
-        message.guild.channels.create('출석-체크', { type: 'GUILD_TEXT', parent: studyCategory.id});
-        message.guild.channels.create('시간-체크', { type: 'GUILD_TEXT', parent: studyCategory.id});
-        message.guild.channels.create('하루-체크', { type: 'GUILD_TEXT', parent: studyCategory.id});
-        message.guild.channels.create('캠-스터디', { type: 'GUILD_VOICE', parent: studyCategory.id});
-
-        message.guild.channels.create('SBOT', { type: 'GUILD_CATEGORY'});
-        const sbotCategory = message.guild.channels.cache.find(c => c.name == 'SBOT' && c.type == 'GUILD_CATEGORY');
-        message.guild.channels.create('봇-안내', { type: 'GUILD_TEXT', parent: sbotCategory.id});
-        message.guild.channels.create('봇-관리', { type: 'GUILD_TEXT', parent: sbotCategory.id});
-
+        message.guild.channels.create('공부-채널', { type: 'GUILD_CATEGORY'})
+        .then((category) => {
+            message.guild.channels.create('출석-체크', { type: 'GUILD_TEXT', parent: category.id, topic: '나 공부하러 왔다 ~ :wave:'});
+            message.guild.channels.create('시간-체크', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT으로 공부시간 체크하자! :alarm_clock:'})
+            .then((channel) => {
+               help(channel); 
+            });
+            message.guild.channels.create('하루-정리', { type: 'GUILD_TEXT', parent: category.id, topic: '오늘 따봉:thumbsup:을 받을까, 벽돌:bricks:을 받을까?'})
+            .then((channel) => {
+                summaryJob = setSummary(channel, userList, goalHour);
+                summaryChannel = channel.id;
+            })
+            message.guild.channels.create('캠-스터디', { type: 'GUILD_VOICE', parent: category.id});
+        });
+        
+        message.guild.channels.create('SBOT', { type: 'GUILD_CATEGORY'})
+        .then((category) => {
+            message.guild.channels.create('봇-안내', { type: 'GUILD_TEXT', parent: category.id});
+            message.guild.channels.create('봇-관리', { type: 'GUILD_TEXT', parent: category.id});
+        });
     }
 
     if (content === 'help') {
@@ -112,7 +120,7 @@ client.on('messageCreate', message => {
     
     if (content === 'set daily summary') {
         if (!summaryJob && !summaryChannel) {
-            summaryJob = setSummary(message, userList, goalHour);
+            summaryJob = setSummary(message.channel, userList, goalHour);
             summaryChannel = message.channelId;
         } else if (summaryChannel === message.channelId) {
             const comment = `이미 **하루 정리**가 설정된 채널입니다.`;

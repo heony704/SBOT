@@ -22,17 +22,22 @@ export default class User {
         this.totalTime.setTime(totalTime);
     }
 
-    public startStopwatch() {
-        this.startTime = new Date();
+    public startStopwatch() :boolean {
+        if (!this.startTime) {
+            this.startTime = new Date();
+            return true;
+        }
+        return false;
     }
 
-    public pauseStopwatch() {
+    public pauseStopwatch() :boolean {
         if (this.startTime) {
             const now = new Date();
             this.totalTime.setTime(this.totalTime.getTime() + (now.getTime() - this.startTime.getTime()));
             this.startTime = null;
+            return true;
         }
-        
+        return false;
     }
 
     public getTotaltime(): Date {

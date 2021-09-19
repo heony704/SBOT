@@ -2,7 +2,7 @@ import { config } from './config';
 
 import Server from './models/Server';
 import { help } from './models/Info';
-import { Client, Guild, Intents } from 'discord.js';
+import { Client, Intents } from 'discord.js';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 const serverList = new Map <string, Server>();
@@ -84,10 +84,12 @@ client.on('messageCreate', message => {
         const target = args.shift();
 
         if (target === 'summary') {
-            if (message.channelId !== server.getSummarychannelid()) {
-                message.channel.send(`다른 채널의 **하루 정리**를 해제할 수 없습니다.`);
+            if (server.getSummarychannelid() && message.channelId !== server.getSummarychannelid()) {
+                message.channel.send(`**하루 정리**를 설정한 채널에서 해제해주세요.`);
             } else if (server.clearSummary()) {
                 message.channel.send(`**하루 정리**가 해제되었습니다.`);
+            } else {
+                message.channel.send(`**하루 정리**가 설정된 채널이 없습니다.`)
             }
         }
 
@@ -143,14 +145,14 @@ client.on('messageCreate', message => {
 
     if (short.getShort('pause').includes(content)) {
         const user = server.getUser(userId);
-        if (user && user.pauseStopwatch) {
+        if (user && user.pauseStopwatch()) {
             message.channel.send(`<@${userId}> 스톱워치 멈춤`);
         }
     }
    
     if (short.getShort('hours').includes(content)) {
         const user = server.getUser(userId);
-        if (user) {
+        if (!user) {
             message.channel.send(`<@${userId}> 스톱워치를 먼저 시작해주세요.`);
             return;
         }
@@ -167,6 +169,10 @@ client.on('messageCreate', message => {
 
     if (short.getShort('goal').includes(content)) {
         message.channel.send(`목표 공부시간은 **${server.getGoalhour()}시간**입니다.`);
+    }
+
+    if (content === 'console server') {
+        console.log(server);
     }
 
 });

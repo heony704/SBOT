@@ -84,7 +84,6 @@ export default class Server {
             } else {
                 this.userList.forEach((user, userId) => {
                     if (user.getStarttime()) {
-                        if (user.getStarttime()){}
                         user.setTotaltime(user.getTotaltime().getTime() + (now.getTime() - user.getStarttime().getTime()));
                         user.setStarttime(now);
                     }

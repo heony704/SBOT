@@ -2,7 +2,7 @@ export default class User {
     private userId: string;
     private startTime: Date;
     private totalTime: Date;
-    // brickCount;
+    // private brickCount: number;
 
     constructor(userId: string) {
         this.userId = userId;

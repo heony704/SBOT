@@ -52,10 +52,11 @@ export default class Server {
         }
     }
 
-    public deleteUser(userId: string) {
-        if (this.hasUser(userId)) {
-            this.userList.delete(userId);
-        }
+    public deleteUser(userId: string): boolean {
+        if (!this.hasUser(userId)) return false;
+
+        this.userList.delete(userId);
+        return true;
     }
 
     public getSummarychannelid(): string {

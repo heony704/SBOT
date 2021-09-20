@@ -21,15 +21,8 @@ client.on('guildDelete', guild => {
 });
 
 client.on('guildMemberRemove', member => {
-    console.log(`[LEAVE]`);
-    console.log(member.guild.id);
-
     const server = serverList.get(member.guild.id);
-    if (server.deleteUser(member.user.id)) {
-        console.log('!!!SUCCESS!!!');
-    } else {
-        console.log('!!!FAIL!!!');
-    }
+    server.deleteUser(member.user.id)
 });
 
 client.on('channelDelete', channel => {

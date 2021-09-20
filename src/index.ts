@@ -11,6 +11,20 @@ client.on('ready', () => {
     console.log(`bot ${client.user.tag} is Ready !`);
 });
 
+client.on('guildCreate', guild => {
+    const server = new Server(guild.id);
+    serverList.set(guild.id, server);
+});
+
+client.on('guildDelete', guild => {
+    serverList.delete(guild.id);
+});
+
+client.on('guildMemberRemove', member => {
+    const server = serverList.get(member.guild.id);
+    server.deleteUser(member.user.id);
+});
+
 client.on('channelDelete', channel => {
     if (channel.type !== 'DM'){
         const server = serverList.get(channel.guildId);
@@ -18,7 +32,7 @@ client.on('channelDelete', channel => {
             server.clearSummary();
         }
     }
-})
+});
 
 client.on('messageCreate', message => {
     if (message.author.bot) return;
@@ -174,6 +188,9 @@ client.on('messageCreate', message => {
     if (content === 'console server') {
         console.log(server);
     }
+    if (content === 'console serverList') {
+        console.log(serverList);
+    }
 
 });
 
@@ -184,4 +201,4 @@ client.login(config.token)
             const server = new Server(guild.id);
             serverList.set(guild.id, server);
         });
-    })
+    });

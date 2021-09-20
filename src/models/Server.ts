@@ -52,6 +52,12 @@ export default class Server {
         }
     }
 
+    public deleteUser(userId: string) {
+        if (this.hasUser(userId)) {
+            this.userList.delete(userId);
+        }
+    }
+
     public getSummarychannelid(): string {
         return this.summaryChannelId;
     }

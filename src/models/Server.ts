@@ -37,6 +37,7 @@ export default class Server {
 
         const user = new User(userId);
         this.userList.set(userId, user);
+        return true;
     }
 
     private hasUser(userId: string): boolean {
@@ -49,6 +50,13 @@ export default class Server {
         } else {
             return null;
         }
+    }
+
+    public deleteUser(userId: string): boolean {
+        if (!this.hasUser(userId)) return false;
+
+        this.userList.delete(userId);
+        return true;
     }
 
     public getSummarychannelid(): string {
@@ -67,14 +75,15 @@ export default class Server {
     }
 
     public setSummary(channel: TextBasedChannels): number {
-        if (this.summaryJob || this.summaryChannelId) {
-            return -1;
-        }
         if (channel.id === this.summaryChannelId) {
             return 0;
         }
+        if (this.summaryJob || this.summaryChannelId) {
+            return -1;
+        }
         this.summaryChannelId = channel.id;
         this.summaryJob = schedule.scheduleJob(this.summaryTime, () => {
+
             const now = new Date();
             const week = ['일','월','화','수','목','금','토'];
             let comment = `:mega:  ${now.getMonth()+1}월 ${now.getDate()}일 ${week[now.getDay()]}요일 \n`;
@@ -83,8 +92,7 @@ export default class Server {
                 comment += `- 아직 참여한 사용자가 없습니다 -`;
             } else {
                 this.userList.forEach((user, userId) => {
-                    if (user.getStarttime()) {
-                        user.setTotaltime(user.getTotaltime().getTime() + (now.getTime() - user.getStarttime().getTime()));
+                    if (user.pauseStopwatch()) {
                         user.setStarttime(now);
                     }
 
@@ -96,9 +104,8 @@ export default class Server {
                     }
                     user.setTotaltime(new Date(2021, 0).getTime());
                 });
-
-                channel.send(comment);
             }
+            channel.send(comment);
         });
         return 1;
     }

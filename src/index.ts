@@ -3,12 +3,26 @@ import { config } from './config';
 import Server from './models/Server';
 import { help } from './models/Info';
 import { Client, Intents } from 'discord.js';
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
 const serverList = new Map <string, Server>();
 
 client.on('ready', () => {
     console.log(`bot ${client.user.tag} is Ready !`);
+});
+
+client.on('guildCreate', guild => {
+    const server = new Server(guild.id);
+    serverList.set(guild.id, server);
+});
+
+client.on('guildDelete', guild => {
+    serverList.delete(guild.id);
+});
+
+client.on('guildMemberRemove', member => {
+    const server = serverList.get(member.guild.id);
+    server.deleteUser(member.user.id)
 });
 
 client.on('channelDelete', channel => {
@@ -18,7 +32,7 @@ client.on('channelDelete', channel => {
             server.clearSummary();
         }
     }
-})
+});
 
 client.on('messageCreate', message => {
     if (message.author.bot) return;
@@ -134,7 +148,7 @@ client.on('messageCreate', message => {
 
     if (short.getShort('start').includes(content)) {
         if (server.addUser(userId)) {
-            message.channel.send(`:tada: <@${userId}> 새로운 스터디원을 환영합니다! :partying_face:`);
+            message.channel.send(`<@${userId}> 새로운 스터디원을 환영합니다!  :partying_face:`);
         }
 
         const user = server.getUser(userId);
@@ -174,6 +188,9 @@ client.on('messageCreate', message => {
     if (content === 'console server') {
         console.log(server);
     }
+    if (content === 'console serverlist') {
+        console.log(serverList);
+    }
 
 });
 
@@ -184,4 +201,4 @@ client.login(config.token)
             const server = new Server(guild.id);
             serverList.set(guild.id, server);
         });
-    })
+    });

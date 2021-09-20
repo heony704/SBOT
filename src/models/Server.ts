@@ -87,8 +87,12 @@ export default class Server {
                 comment += `- 아직 참여한 사용자가 없습니다 -`;
             } else {
                 this.userList.forEach((user, userId) => {
-                    if (user.getStarttime()) {
-                        user.setTotaltime(user.getTotaltime().getTime() + (now.getTime() - user.getStarttime().getTime()));
+                    // if (user.getStarttime()) {
+                    //     user.setTotaltime(user.getTotaltime().getTime() + (now.getTime() - user.getStarttime().getTime()));
+                    //     user.setStarttime(now);
+                    // }
+
+                    if (user.pauseStopwatch()) {
                         user.setStarttime(now);
                     }
 

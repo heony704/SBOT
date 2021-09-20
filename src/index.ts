@@ -134,7 +134,7 @@ client.on('messageCreate', message => {
 
     if (short.getShort('start').includes(content)) {
         if (server.addUser(userId)) {
-            message.channel.send(`:tada: <@${userId}> 새로운 스터디원을 환영합니다! :partying_face:`);
+            message.channel.send(`<@${userId}> 새로운 스터디원을 환영합니다!  :partying_face:`);
         }
 
         const user = server.getUser(userId);

@@ -97,9 +97,8 @@ export default class Server {
                     }
                     user.setTotaltime(new Date(2021, 0).getTime());
                 });
-
-                channel.send(comment);
             }
+            channel.send(comment);
         });
         return 1;
     }

@@ -37,6 +37,7 @@ export default class Server {
 
         const user = new User(userId);
         this.userList.set(userId, user);
+        return true;
     }
 
     private hasUser(userId: string): boolean {
@@ -75,6 +76,9 @@ export default class Server {
         }
         this.summaryChannelId = channel.id;
         this.summaryJob = schedule.scheduleJob(this.summaryTime, () => {
+
+            console.log('[before]');
+            console.log(this.userList);
             const now = new Date();
             const week = ['일','월','화','수','목','금','토'];
             let comment = `:mega:  ${now.getMonth()+1}월 ${now.getDate()}일 ${week[now.getDay()]}요일 \n`;
@@ -96,6 +100,9 @@ export default class Server {
                     }
                     user.setTotaltime(new Date(2021, 0).getTime());
                 });
+
+                console.log('[after]');
+                console.log(this.userList);
 
                 channel.send(comment);
             }

@@ -3,7 +3,7 @@ import { config } from './config';
 import Server from './models/Server';
 import { help } from './models/Info';
 import { Client, Intents } from 'discord.js';
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
 const serverList = new Map <string, Server>();
 

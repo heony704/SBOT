@@ -188,7 +188,7 @@ client.on('messageCreate', message => {
     if (content === 'console server') {
         console.log(server);
     }
-    if (content === 'console serverList') {
+    if (content === 'console serverlist') {
         console.log(serverList);
     }
 

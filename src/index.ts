@@ -164,7 +164,7 @@ client.on('messageCreate', message => {
         }
     }
    
-    if (short.getShort('hours').includes(content)) {
+    if (short.getShort('time').includes(content)) {
         const user = server.getUser(userId);
         if (!user) {
             message.channel.send(`<@${userId}> 스톱워치를 먼저 시작해주세요.`);

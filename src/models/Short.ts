@@ -5,7 +5,7 @@ export default class Short {
         this.shortList = new Map();
         this.shortList.set('start', ['start', 's']);
         this.shortList.set('pause', ['pause', 'p']);
-        this.shortList.set('hours', ['hours', 'h']);
+        this.shortList.set('time', ['time', 't']);
         this.shortList.set('goal', ['goal', 'g']);
     }
 
@@ -18,7 +18,7 @@ export default class Short {
 
         this.shortList.get('start').push('ㄴ');
         this.shortList.get('pause').push('ㅔ');
-        this.shortList.get('hours').push('ㅗ');
+        this.shortList.get('time').push('ㅅ');
         this.shortList.get('goal').push('ㅎ');
         return true;
     }
@@ -28,7 +28,7 @@ export default class Short {
 
         this.shortList.get('start').pop();
         this.shortList.get('pause').pop();
-        this.shortList.get('hours').pop();
+        this.shortList.get('time').pop();
         this.shortList.get('goal').pop();
         return true;
     }

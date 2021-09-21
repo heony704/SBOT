@@ -1,7 +1,7 @@
 import { config } from './config';
 
 import Server from './models/Server';
-import { help } from './models/Info';
+import { help, guide, control } from './models/Info';
 import { Client, Intents } from 'discord.js';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
@@ -14,6 +14,18 @@ client.on('ready', () => {
 client.on('guildCreate', guild => {
     const server = new Server(guild.id);
     serverList.set(guild.id, server);
+    const channelManager = guild.channels;
+    channelManager.create('SBOT', { type: 'GUILD_CATEGORY'})
+        .then((category) => {
+            channelManager.create('봇-안내', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT 안내 채널입니다.'})
+                .then((channel) => {
+                    channel.send(guide);
+                });
+            channelManager.create('봇-관리', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT 관리 채널입니다.'})
+                .then((channel) => {
+                    channel.send(control);
+                })
+        });
 });
 
 client.on('guildDelete', guild => {
@@ -120,26 +132,28 @@ client.on('messageCreate', message => {
         const channelManager = message.guild.channels;
         channelManager.create('공부-채널', { type: 'GUILD_CATEGORY'})
         .then((category) => {
-            channelManager.create('출석-체크', { type: 'GUILD_TEXT', parent: category.id, topic: '나 공부하러 왔다 ~ :wave:'});
+            channelManager.create('출석-체크', { type: 'GUILD_TEXT', parent: category.id, topic: '나 공부하러 왔다 ~ :wave:'})
+                .then((channel) => {
+                    channel.send('출석체크를 통해 공부의 시작을 알리세요.  :sunglasses:');
+                })
             channelManager.create('시간-체크', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT으로 공부시간 체크하자! :alarm_clock:'})
-            .then((channel) => {
-               channel.send(help);
-            });
+                .then((channel) => {
+                    channel.send('`start` 로 스톱워치를 시작하세요! `help` 를 통해 사용가능한 명령어를 확인할 수 있습니다.');
+                    channel.send(help);
+                });
             channelManager.create('하루-정리', { type: 'GUILD_TEXT', parent: category.id, topic: '오늘 따봉:thumbsup:을 받을까, 벽돌:bricks:을 받을까?'})
-            .then((channel) => {
-                server.setSummary(channel);
-                let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
-                comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`
-                channel.send(comment);
-            })
+                .then((channel) => {
+                    server.setSummary(channel);
+                    let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
+                    comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면   벽돌:bricks:을 받습니다.`;
+                    channel.send(comment);
+                });
             channelManager.create('캠-스터디', { type: 'GUILD_VOICE', parent: category.id});
         });
-        
-        channelManager.create('SBOT', { type: 'GUILD_CATEGORY'})
+        channelManager.create('사담-채널', {type: 'GUILD_CATEGORY'})
         .then((category) => {
-            channelManager.create('봇-안내', { type: 'GUILD_TEXT', parent: category.id});
-            channelManager.create('봇-관리', { type: 'GUILD_TEXT', parent: category.id});
-        });
+            channelManager.create('수다는-적당히', { type: 'GUILD_TEXT', parent: category.id});
+        })
     }
 
     if (content === 'help') {

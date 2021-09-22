@@ -1,3 +1,3 @@
 export const config = {
-    token : 'enterHereTokenId'
+    token : 'enterYourBotTokenHere'
 }

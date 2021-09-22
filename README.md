@@ -70,6 +70,7 @@ OAuth2 URL Generator 를 통해 서버에 봇을 초대하세요.
 <br>  
 <br>  
 <br>
+
 ---
 세상의 모든 취준생들을 위하여.  
 **thanks for** 박정은, 이은혜, 이세정, 김소이

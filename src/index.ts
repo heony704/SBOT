@@ -138,14 +138,14 @@ client.on('messageCreate', message => {
                 })
             channelManager.create('시간-체크', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT으로 공부시간 체크하자! :alarm_clock:'})
                 .then((channel) => {
-                    channel.send('`start` 로 스톱워치를 시작하세요! `help` 를 통해 사용가능한 명령어를 확인할 수 있습니다.');
+                    channel.send('`start` 로 스톱워치를 시작하세요! `help` 를 통해 사용가능한 명령어를 확인할 수 있습니다.\n채널 알림을 꺼두는 것을 추천합니다. :no_bell:');
                     channel.send(help);
                 });
             channelManager.create('하루-정리', { type: 'GUILD_TEXT', parent: category.id, topic: '오늘 따봉:thumbsup:을 받을까, 벽돌:bricks:을 받을까?'})
                 .then((channel) => {
                     server.setSummary(channel);
                     let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
-                    comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면   벽돌:bricks:을 받습니다.`;
+                    comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`;
                     channel.send(comment);
                 });
             channelManager.create('캠-스터디', { type: 'GUILD_VOICE', parent: category.id});
@@ -153,7 +153,11 @@ client.on('messageCreate', message => {
         channelManager.create('사담-채널', {type: 'GUILD_CATEGORY'})
         .then((category) => {
             channelManager.create('수다는-적당히', { type: 'GUILD_TEXT', parent: category.id});
-        })
+            channelManager.create('감정-쓰레기통', { type: 'GUILD_TEXT', parent: category.id})
+                .then((channel) => {
+                    channel.send('스트레스를 쏟아붓는 곳입니다. 자유롭게 사용하기 위해 채널 알림을 꺼주세요! :no_bell:');
+                });
+        });
     }
 
     if (content === 'help') {

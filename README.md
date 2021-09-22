@@ -67,8 +67,6 @@ OAuth2 URL Generator 를 통해 서버에 봇을 초대하세요.
 - scope = bot
 - permissions = 
 <br>  
-<br>  
-<br>  
 <br>
 
 ---

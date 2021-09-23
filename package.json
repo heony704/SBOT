@@ -1,16 +1,15 @@
 {
   "name": "sbot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "version": "2.0",
+  "description": "discord bot for camera study.",
+  "main": "dist/index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
-    "dev": "nodemon dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "seungheon lee",
+  "license": "MIT",
   "dependencies": {
     "discord.js": "^13.1.0",
     "node-schedule": "^2.0.0",

@@ -13,7 +13,7 @@
 # ✍ 시작하기
 ### 1. SBOT을 내 서버에 초대합니다.
 생성된 SBOT 채널은 삭제해도 상관없어요. 하지만 삭제한다면 다시 생기지 않아요.
-<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134470861-3f6d87ab-0b41-4634-b854-83cf05ff1850.gif"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134494644-fca786b7-8f8f-461a-af6a-73de8f944758.gif"></p>
 
 ### 2. 캠스터디 환경을 조성하고 싶다면, `init`을 입력하세요.
 자동으로 공부 채널을 만들어 줘요. `init`을 하지 않아도 SBOT을 이용할 수 있어요.

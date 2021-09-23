@@ -1,4 +1,4 @@
 export default {
     token : 'enterYourBotTokenHere',
-    id : 'enterYourBotId'
+    id : 'enterYourBotIdHere'
 }

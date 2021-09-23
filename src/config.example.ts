@@ -1,3 +1,4 @@
-export const config = {
-    token : 'enterYourBotTokenHere'
+export default {
+    token : 'enterYourBotTokenHere',
+    id : 'enterYourBotId'
 }

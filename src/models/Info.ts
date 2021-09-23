@@ -1,3 +1,7 @@
-const help = `\`\`\`diff\n! 명령어\nstart , s  스톱워치를 시작합니다.\npause , p  스톱워치를 멈춥니다.\nhours , h  오늘 얼마나 공부했는지 알려줍니다.\ngoal  , g  목표 공부시간을 알려줍니다.\n\`\`\``;
+const help = `\`\`\`diff\n! 명령어\nstart , s  스톱워치를 시작합니다.\npause , p  스톱워치를 멈춥니다.\ntime  , t  오늘 얼마나 공부했는지 알려줍니다.\ngoal  , g  목표 공부시간을 알려줍니다.\n\`\`\``;
 
-export { help };
+const guide = 'SBOT 안내를 위한 채널입니다.\nSBOT 카테고리를 삭제해도 SBOT 사용에는 문제없습니다. 다만 삭제하면 다시 생기지 않으니 주의하세요.\n\n**SBOT**은 디스코드로 캠스터디를 하기 위해 만들어졌습니다. 이런 일들을 할 수 있어요!\n- 스톱워치로 내 공부시간 체크하기\n- 목표 시간 정해서 공부하기\n- 하루동안 얼마나 공부했는지 정리하기\n- 손쉽게 캠스터디 환경 조성하기\n\n**일반 사용자 명령어**입니다.\n- `start` `s`  스톱워치를 시작합니다.\n- `pause` `p`  스톱워치를 멈춥니다.\n- `time` `t`  오늘 얼마나 공부했는지 알려줍니다.\n- `goal` `g`  목표 공부시간을 알려줍니다.\n- `help`  사용가능한 명령어를 알려줍니다.\n\n**관리자 명령어**입니다.\n- `init`  캠스터디 전용 카테고리와 채널을 생성하고 봇 권한을 부여합니다.\n- `set summary`  명령어를 입력한 채널에 하루 정리를 설정합니다.\n- `clear summary`  명령어를 입력한 채널의 하루 정리를 해제합니다.\n- `set korean`  한글 명령어 `ㄴ` `ㅔ` `ㅅ` `ㅗ` 를 적용합니다.\n- `clear korean` 한글 명령어를 해제합니다.\n- `set goalhour [hour]`  목표 공부시간을 `[hour]`시간으로 설정합니다. 기본값은 6시간입니다.\n- `set summarytime [hour] [min]`  하루 정리가 `[hour]`시 `[min]`분을 기준으로 작동합니다. 0시 0분 ~ 23시 59분 사이로 입력해주세요. 기본값은 0시 0분(자정)입니다.\n\n더 자세히 알고 싶다면 아래 링크를 눌러주세요! :relaxed:\n\nhttps://github.com/SeungHe0n/SBOT#readme';
+
+const control = 'SBOT 관리 전용 채널입니다.\nSBOT을 조용하게 관리할 수 있도록 만들어진 비공개 채널입니다.\n관리자 명령어는 해당 채널이 아닌 어느 채널에서도 사용할 수 있으니 해당 채널을 삭제하셔도 문제없습니다.\n\n**관리자 명령어**입니다.\n- `init`  캠스터디 전용 카테고리와 채널을 생성하고 봇 권한을 부여합니다.\n- `set summary`  명령어를 입력한 채널에 하루 정리를 설정합니다.\n- `clear summary`  명령어를 입력한 채널의 하루 정리를 해제합니다.\n- `set korean`  한글 명령어 `ㄴ` `ㅔ` `ㅅ` `ㅗ` 를 적용합니다.\n- `clear korean` 한글 명령어를 해제합니다.\n- `set goalhour [hour]`  목표 공부시간을 `[hour]`시간으로 설정합니다. 기본값은 6시간입니다.\n- `set summarytime [hour] [min]`  하루 정리가 `[hour]`시 `[min]`분을 기준으로 작동합니다. 0시 0분 ~ 23시 59분 사이로 입력해주세요. 기본값은 0시 0분(자정)입니다.\n\n더 자세히 알고 싶다면 아래 링크를 눌러주세요! :relaxed:\n\nhttps://github.com/SeungHe0n/SBOT#readme';
+
+export { help, guide, control };

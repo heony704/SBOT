@@ -1,7 +1,7 @@
-import { config } from './config';
+import bot from './config';
 
 import Server from './models/Server';
-import { help } from './models/Info';
+import { help, guide, control } from './models/Info';
 import { Client, Intents } from 'discord.js';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
@@ -14,6 +14,29 @@ client.on('ready', () => {
 client.on('guildCreate', guild => {
     const server = new Server(guild.id);
     serverList.set(guild.id, server);
+    const channelManager = guild.channels;
+    channelManager.create('SBOT', {
+        type: 'GUILD_CATEGORY', 
+        permissionOverwrites: [
+            { 
+                id: guild.roles.everyone,
+                deny: ['VIEW_CHANNEL']
+            },
+            {
+                id: bot.id,
+                allow: ['VIEW_CHANNEL']
+            }
+        ]})
+        .then((category) => {
+            channelManager.create('봇-안내', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT 안내 채널입니다.'})
+                .then((channel) => {
+                    channel.send(guide);
+                });
+            channelManager.create('봇-관리', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT 관리 채널입니다.'})
+                .then((channel) => {
+                    channel.send(control);
+                });
+        });
 });
 
 client.on('guildDelete', guild => {
@@ -118,27 +141,53 @@ client.on('messageCreate', message => {
 
     if (content === 'init') {
         const channelManager = message.guild.channels;
+
         channelManager.create('공부-채널', { type: 'GUILD_CATEGORY'})
         .then((category) => {
-            channelManager.create('출석-체크', { type: 'GUILD_TEXT', parent: category.id, topic: '나 공부하러 왔다 ~ :wave:'});
+            channelManager.create('출석-체크', { type: 'GUILD_TEXT', parent: category.id, topic: '나 공부하러 왔다 ~ :wave:'})
+                .then((channel) => {
+                    channel.send('출석체크를 통해 공부의 시작을 알리세요. :sunglasses:');
+                    channel.permissionOverwrites.create(bot.id, {'VIEW_CHANNEL': false});
+                })
             channelManager.create('시간-체크', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT으로 공부시간 체크하자! :alarm_clock:'})
-            .then((channel) => {
-               channel.send(help);
-            });
-            channelManager.create('하루-정리', { type: 'GUILD_TEXT', parent: category.id, topic: '오늘 따봉:thumbsup:을 받을까, 벽돌:bricks:을 받을까?'})
-            .then((channel) => {
-                server.setSummary(channel);
-                let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
-                comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`
-                channel.send(comment);
+                .then((channel) => {
+                    channel.send('`start` 로 스톱워치를 시작하세요! `help` 를 통해 사용가능한 명령어를 확인할 수 있습니다.\n채널 알림을 꺼두는 것을 추천합니다. :no_bell:');
+                    channel.send(help);
+                });
+            channelManager.create('하루-정리', { 
+                type: 'GUILD_TEXT', 
+                parent: category.id, 
+                topic: '오늘 따봉:thumbsup:을 받을까, 벽돌:bricks:을 받을까?', 
+                permissionOverwrites: [
+                    {
+                        id: message.guild.roles.everyone,
+                        deny: ['SEND_MESSAGES']
+                    },
+                    {
+                        id: bot.id,
+                        allow: ['SEND_MESSAGES']
+                    }
+                ]
             })
+                .then((channel) => {
+                    server.setSummary(channel);
+                    let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
+                    comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`;
+                    channel.send(comment);
+                });
             channelManager.create('캠-스터디', { type: 'GUILD_VOICE', parent: category.id});
         });
-        
-        channelManager.create('SBOT', { type: 'GUILD_CATEGORY'})
+        channelManager.create('사담-채널', { type: 'GUILD_CATEGORY'})
         .then((category) => {
-            channelManager.create('봇-안내', { type: 'GUILD_TEXT', parent: category.id});
-            channelManager.create('봇-관리', { type: 'GUILD_TEXT', parent: category.id});
+            channelManager.create('수다는-적당히', { type: 'GUILD_TEXT', parent: category.id, topic: ':speaking_head:'})
+            .then((channel) => {
+                channel.send('자유롭게 이야기할 수 있는 공간입니다.');
+            })
+            channelManager.create('감정-쓰레기통', { type: 'GUILD_TEXT', parent: category.id, topic: ':wastebasket:'})
+            .then((channel)=> {
+                channel.send('스트레스를 쏟아붓는 곳입니다. 자유롭게 사용하기 위해 채널 알림을 꺼주세요! :no_bell:');
+                category.permissionOverwrites.create(bot.id, {'VIEW_CHANNEL': false});
+            });
         });
     }
 
@@ -164,7 +213,7 @@ client.on('messageCreate', message => {
         }
     }
    
-    if (short.getShort('hours').includes(content)) {
+    if (short.getShort('time').includes(content)) {
         const user = server.getUser(userId);
         if (!user) {
             message.channel.send(`<@${userId}> 스톱워치를 먼저 시작해주세요.`);
@@ -191,10 +240,15 @@ client.on('messageCreate', message => {
     if (content === 'console serverlist') {
         console.log(serverList);
     }
+    if (content === 'console channels') {
+        message.guild.channels.cache.forEach(channel => {
+            console.log(channel);
+        });
+    }
 
 });
 
-client.login(config.token)
+client.login(bot.token)
     .then(() => {
         console.log('client login !');
         client.guilds.cache.forEach(guild => {

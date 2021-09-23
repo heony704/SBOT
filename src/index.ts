@@ -109,7 +109,7 @@ client.on('messageCreate', message => {
 
         if (args.length === 0 && target === 'korean') {
             if (short.setKorean()) {
-                message.channel.send(`지금부터 한글 명령어 \`ㄴ\` , \`ㅔ\` , \`ㅗ\` , \`ㅎ\` 가 적용됩니다.\n`);
+                message.channel.send(`지금부터 한글 명령어 \`ㄴ\` , \`ㅔ\` , \`ㅅ\` , \`ㅎ\` 가 적용됩니다.\n`);
             } else {
                 message.channel.send(`이미 한글 명령어가 적용된 상태입니다.`);
             }

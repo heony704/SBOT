@@ -17,11 +17,11 @@
 
 ### 2. 캠스터디 환경을 조성하고 싶다면, `init`을 입력하세요.
 자동으로 공부 채널을 만들어 줘요. `init`을 하지 않아도 SBOT을 이용할 수 있어요.
-<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134470881-857afbae-6247-41e8-8a58-cf3b51c63eb7.gif"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134495912-0544edc8-a556-40d3-b8f9-ceb60e2a8c63.gif"></p>
 
 ### 3. `start`로 스터디를 시작하세요 !
 `start`로 스톱워치를 실행해 스터디에 참여하세요. `help`를 통해 명령어를 언제든지 확인할 수 있습니다.
-<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134470886-177c8c8e-1e20-4dd8-b5b4-ed31eab931b3.gif"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134495917-09eddded-269c-4bf9-ace1-2ac9f27841e0.gif"></p>
 
 # 💬 사용하기
 ### # 공부시간 체크하기

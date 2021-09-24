@@ -50,6 +50,7 @@
 SBOT은 어떻게 동작할까요?
 ### 일반 사용자 시점
 <p align="center"><img src="https://user-images.githubusercontent.com/36994104/134497720-fc7d7243-a450-4ecb-8abd-c8351cfb07a0.gif"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134697984-a5823575-0121-4114-9e71-aca2d311637a.gif"></p>
 
 ### 관리자 시점
 <p align="center"><img src="https://user-images.githubusercontent.com/36994104/134497728-ab246907-648c-4649-9144-cab6d093b9fe.gif"></p>
@@ -83,4 +84,4 @@ npm start
 
 ---
 세상의 모든 취준생들을 위하여.  
-**Thanks to** 박정은, 이은혜, 이세정, 김소이
+**Thanks to** 박정은, 이은혜, 김소이, 이세정

@@ -12,7 +12,7 @@ client.on('ready', () => {
 });
 
 client.on('guildCreate', guild => {
-    const server = new Server(guild.id);
+    const server = new Server();
     serverList.set(guild.id, server);
     const channelManager = guild.channels;
     channelManager.create('SBOT', {
@@ -252,7 +252,7 @@ client.login(bot.token)
     .then(() => {
         console.log('client login !');
         client.guilds.cache.forEach(guild => {
-            const server = new Server(guild.id);
+            const server = new Server();
             serverList.set(guild.id, server);
         });
     });

@@ -1,11 +1,9 @@
 export default class User {
-    private userId: string;
     private startTime: Date;
     private totalTime: Date;
     // private brickCount: number;
 
-    constructor(userId: string) {
-        this.userId = userId;
+    constructor() {
         this.startTime = null;
         this.totalTime = new Date(2021, 0);
     }

@@ -4,7 +4,6 @@ import Short from './Short';
 import User from './User';
 
 export default class Server {
-    private serverId: string;
     private goalHour: number;
     private userList: Map <string, User>;
     private shortList: Short;
@@ -13,8 +12,7 @@ export default class Server {
     private summaryJob: schedule.Job;
     private summaryTime: string;
 
-    constructor(serverId: string) {
-        this.serverId = serverId;
+    constructor() {
         this.goalHour = 6;
         this.userList = new Map();
         this.shortList = new Short();
@@ -35,7 +33,7 @@ export default class Server {
     public addUser(userId: string): boolean {
         if (this.userList.has(userId)) return false;
 
-        const user = new User(userId);
+        const user = new User();
         this.userList.set(userId, user);
         return true;
     }

@@ -13,15 +13,15 @@
 # ✍ 시작하기
 ### 1. SBOT을 내 서버에 초대합니다.
 생성된 SBOT 채널은 삭제해도 상관없어요. 하지만 삭제한다면 다시 생기지 않아요.
-<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134494644-fca786b7-8f8f-461a-af6a-73de8f944758.gif"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134497310-18704528-43ae-4b7b-a9c1-c58539c7e413.gif"></p>
 
 ### 2. 캠스터디 환경을 조성하고 싶다면, `init`을 입력하세요.
 자동으로 공부 채널을 만들어 줘요. `init`을 하지 않아도 SBOT을 이용할 수 있어요.
-<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134495912-0544edc8-a556-40d3-b8f9-ceb60e2a8c63.gif"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134497313-0302fe89-7751-4b82-972f-938b338d8c3f.gif"></p>
 
 ### 3. `start`로 스터디를 시작하세요 !
 `start`로 스톱워치를 실행해 스터디에 참여하세요. `help`를 통해 명령어를 언제든지 확인할 수 있습니다.
-<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134495917-09eddded-269c-4bf9-ace1-2ac9f27841e0.gif"></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134497318-9c3bb6e4-aad8-44c8-bcf5-06218003b87c.gif"></p>
 
 # 💬 사용하기
 ### # 공부시간 체크하기
@@ -49,8 +49,11 @@
 # 👀 미리보기
 SBOT은 어떻게 동작할까요?
 ### 일반 사용자 시점
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134497720-fc7d7243-a450-4ecb-8abd-c8351cfb07a0.gif"></p>
 
 ### 관리자 시점
+<p align="center"><img src="https://user-images.githubusercontent.com/36994104/134497728-ab246907-648c-4649-9144-cab6d093b9fe.gif"></p>
+
 # 💻 소스코드 사용하기
 ### 1. 원격 저장소를 복제한 뒤 모듈을 설치합니다.
 ```bash

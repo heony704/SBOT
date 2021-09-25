@@ -40,6 +40,7 @@ client.on('guildCreate', guild => {
 });
 
 client.on('guildDelete', guild => {
+    serverList.get(guild.id).clearSummary();
     serverList.delete(guild.id);
 });
 

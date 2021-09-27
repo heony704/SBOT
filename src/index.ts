@@ -1,7 +1,7 @@
 import bot from './config';
 
 import Server from './models/Server';
-import { help, guide, control } from './models/Info';
+import { help, guide, control } from './info';
 import { Client, Intents } from 'discord.js';
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 
@@ -250,10 +250,10 @@ client.on('messageCreate', message => {
 });
 
 client.login(bot.token)
-    .then(() => {
-        console.log('client login !');
-        client.guilds.cache.forEach(guild => {
-            const server = new Server();
-            serverList.set(guild.id, server);
-        });
+.then(() => {
+    console.log('client login !');
+    client.guilds.cache.forEach(guild => {
+        const server = new Server();
+        serverList.set(guild.id, server);
     });
+});

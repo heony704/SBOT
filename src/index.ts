@@ -63,7 +63,6 @@ client.on('messageCreate', message => {
 
     const server = serverList.get(message.guildId);
     const userId = message.author.id;
-    const short = server.getShortlist();
 
     const content = message.content.toLowerCase();
     const args = content.split(' ');
@@ -109,10 +108,11 @@ client.on('messageCreate', message => {
         }
 
         if (args.length === 0 && target === 'korean') {
-            if (short.setKorean()) {
-                message.channel.send(`지금부터 한글 명령어 \`ㄴ\` , \`ㅔ\` , \`ㅅ\` , \`ㅎ\` 가 적용됩니다.\n`);
-            } else {
+            if (server.useKorean) {
                 message.channel.send(`이미 한글 명령어가 적용된 상태입니다.`);
+            } else {
+                message.channel.send(`지금부터 한글 명령어 \`ㄴ\` , \`ㅔ\` , \`ㅅ\` , \`ㅎ\` 가 적용됩니다.\n`);
+                server.useKorean = true;
             }
         }
     }
@@ -132,8 +132,9 @@ client.on('messageCreate', message => {
         }
 
         if (target === 'korean') {
-            if (short.clearKorean()) {
+            if (server.useKorean) {
                 message.channel.send(`지금부터 한글 명령어가 해제됩니다.`);
+                server.useKorean = false;
             } else {
                 message.channel.send(`이미 한글 명령어가 해제된 상태입니다.`);
             }
@@ -196,7 +197,7 @@ client.on('messageCreate', message => {
         message.channel.send(help);
     }
 
-    if (short.getShort('start').includes(content)) {
+    if (content === 'start' || content === 's' || (content === 'ㄴ' && server.useKorean === true)) {
         if (server.addUser(userId)) {
             message.channel.send(`<@${userId}> 새로운 스터디원을 환영합니다!  :partying_face:`);
         }
@@ -207,14 +208,14 @@ client.on('messageCreate', message => {
         }
     }
 
-    if (short.getShort('pause').includes(content)) {
+    if (content === 'pause' || content === 'p' || (content === 'ㅔ' && server.useKorean === true)) {
         const user = server.getUser(userId);
         if (user && user.pauseStopwatch()) {
             message.channel.send(`<@${userId}> 스톱워치 멈춤`);
         }
     }
-   
-    if (short.getShort('time').includes(content)) {
+
+    if (content === 'time' || content === 't' || (content === 'ㅅ' && server.useKorean === true)) {
         const user = server.getUser(userId);
         if (!user) {
             message.channel.send(`<@${userId}> 스톱워치를 먼저 시작해주세요.`);
@@ -231,7 +232,7 @@ client.on('messageCreate', message => {
         message.channel.send(comment);
     }
 
-    if (short.getShort('goal').includes(content)) {
+    if (content === 'goal' || content === 'g' || (content === 'ㅎ' && server.useKorean === true)) {
         message.channel.send(`목표 공부시간은 **${server.getGoalhour()}시간**입니다.`);
     }
 

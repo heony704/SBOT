@@ -42,15 +42,15 @@ export default class Server {
         return true;
     }
 
-    public getSummarychannelid(): string {
+    public getSummaryChannelId(): string {
         return this.summary.channelId;
     }
 
-    public getGoalhour(): number {
+    public getGoalHour(): number {
         return this.goalHour;
     }
 
-    public setGoalhour(hour: number): boolean {
+    public setGoalHour(hour: number): boolean {
         if (hour < 0) return false;
         
         this.goalHour = hour;
@@ -76,16 +76,16 @@ export default class Server {
             } else {
                 this.userList.forEach((user, userId) => {
                     if (user.pauseStopwatch()) {
-                        user.setStarttime(now);
+                        user.setStartTime(now);
                     }
 
-                    comment += `<@${userId}> ${user.getTotaltime().getHours()}시간 ${user.getTotaltime().getMinutes()}분  `;
-                    if (user.getTotaltime().getHours() >= this.goalHour) {
+                    comment += `<@${userId}> ${user.getTotalTime().getHours()}시간 ${user.getTotalTime().getMinutes()}분  `;
+                    if (user.getTotalTime().getHours() >= this.goalHour) {
                         comment += `:thumbsup:\n`;
                     } else {
                         comment += `:bricks:\n`;
                     }
-                    user.setTotaltime(new Date(2021, 0).getTime());
+                    user.setTotalTime(new Date(2021, 0).getTime());
                 });
             }
             channel.send(comment);

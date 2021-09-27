@@ -8,15 +8,15 @@ export default class User {
         this.totalTime = new Date(2021, 0);
     }
 
-    public getStarttime(): Date {
+    public getStartTime(): Date {
         return this.startTime;
     }
 
-    public setStarttime(startTime: Date) {
+    public setStartTime(startTime: Date) {
         this.startTime = startTime;
     }
 
-    public setTotaltime(totalTime: number) {
+    public setTotalTime(totalTime: number) {
         this.totalTime.setTime(totalTime);
     }
 
@@ -38,7 +38,7 @@ export default class User {
         return false;
     }
 
-    public getTotaltime(): Date {
+    public getTotalTime(): Date {
         if (this.startTime) {
             const now = new Date();
             const tmp = new Date();

@@ -6,23 +6,13 @@ export default class Server {
     private goalHour: number;
     private userList: Map <string, User>;
     public useKorean: boolean;
-    // summary;
-    private summaryChannelId: string;
-    private summaryJob: schedule.Job;
-    private summaryTime: string;
+    private summary: {channelId: string, job: schedule.Job};
 
     constructor() {
         this.goalHour = 6;
         this.userList = new Map();
         this.useKorean = false;
-        // this.summary = {
-        //     channel: null,
-        //     job: null,
-        //     time: '0 0 15 * * *'
-        // }
-        this.summaryChannelId = null;
-        this.summaryJob = null;
-        this.summaryTime = '0 0 15 * * *';
+        this.summary = {channelId: null, job: null};
     }
     
     public addUser(userId: string): boolean {
@@ -53,7 +43,7 @@ export default class Server {
     }
 
     public getSummarychannelid(): string {
-        return this.summaryChannelId;
+        return this.summary.channelId;
     }
 
     public getGoalhour(): number {
@@ -68,14 +58,14 @@ export default class Server {
     }
 
     public setSummary(channel: TextBasedChannels): number {
-        if (channel.id === this.summaryChannelId) {
+        if (channel.id === this.summary.channelId) {
             return 0;
         }
-        if (this.summaryJob || this.summaryChannelId) {
+        if (this.summary.job || this.summary.channelId) {
             return -1;
         }
-        this.summaryChannelId = channel.id;
-        this.summaryJob = schedule.scheduleJob(this.summaryTime, () => {
+        this.summary.channelId = channel.id;
+        this.summary.job = schedule.scheduleJob('0 0 15 * * *', () => {
 
             const now = new Date();
             const week = ['일','월','화','수','목','금','토'];
@@ -112,17 +102,17 @@ export default class Server {
         } else {
             correctHour = hour + 15;
         }
-        this.summaryTime = `0 ${min} ${correctHour} * * *`;
-        schedule.rescheduleJob(this.summaryJob, this.summaryTime);
+        const summaryTime = `0 ${min} ${correctHour} * * *`;
+        schedule.rescheduleJob(this.summary.job, summaryTime);
         return true;
     }
 
     public clearSummary(): boolean {
-        if (!this.summaryJob) return false;
+        if (!this.summary.job) return false;
 
-        schedule.cancelJob(this.summaryJob);
-        this.summaryChannelId = null;
-        this.summaryJob = null;
+        schedule.cancelJob(this.summary.job);
+        this.summary.channelId = null;
+        this.summary.job = null;
         return true;
     }
 }

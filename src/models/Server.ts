@@ -1,12 +1,11 @@
 import { TextBasedChannels } from 'discord.js';
 import schedule from 'node-schedule';
-import Short from './Short';
 import User from './User';
 
 export default class Server {
     private goalHour: number;
     private userList: Map <string, User>;
-    private shortList: Short;
+    public useKorean: boolean;
     // summary;
     private summaryChannelId: string;
     private summaryJob: schedule.Job;
@@ -15,7 +14,7 @@ export default class Server {
     constructor() {
         this.goalHour = 6;
         this.userList = new Map();
-        this.shortList = new Short();
+        this.useKorean = false;
         // this.summary = {
         //     channel: null,
         //     job: null,
@@ -24,10 +23,6 @@ export default class Server {
         this.summaryChannelId = null;
         this.summaryJob = null;
         this.summaryTime = '0 0 15 * * *';
-    }
-
-    public getShortlist(): Short {
-        return this.shortList;
     }
     
     public addUser(userId: string): boolean {

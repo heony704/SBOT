@@ -1,4 +1,4 @@
-import { Guild, Message } from 'discord.js';
+import { Guild, Message, TextBasedChannels } from 'discord.js';
 import Server from './Server';
 import config from '../config';
 import { help, guide, control } from '../info';
@@ -37,7 +37,7 @@ export default class Bot {
 
     public checkSummary(guildId: string, channelId: string) {
         const server = this.serverList.get(guildId);
-        if (channelId === server.getSummaryChannelId()) {
+        if (channelId === server.summary.channelId) {
             server.clearSummary();
         }
     }
@@ -102,7 +102,8 @@ export default class Bot {
                 ]
             })
             .then((channel) => {
-                server.setSummary(channel);
+                if (server.summary.job || server.summary.channelId) server.clearSummary();
+                server.setSummary(channel.id, this.summary);
                 let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
                 comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`;
                 channel.send(comment);
@@ -204,10 +205,11 @@ export default class Bot {
         const server = this.serverList.get(message.guildId);
         const channel = message.channel;
 
-        if (server.setGoalHour(hour)) {
-            channel.send(`목표 공부시간이 **${hour}시간**으로 변경되었습니다.`);
-        } else {
+        if (hour < 0) {
             channel.send(`목표 공부시간을 자연수로 입력해주세요.`);
+        } else {
+            server.goalHour = hour;
+            channel.send(`목표 공부시간이 **${hour}시간**으로 변경되었습니다.`);
         }
     }
 
@@ -215,39 +217,71 @@ export default class Bot {
         const server = this.serverList.get(message.guildId);
         const channel = message.channel;
 
-        if (server.resetSummary(hour, min)) {
-            channel.send(`**하루 정리**가 ${hour}시 ${min}분을 기준으로 동작합니다.`);
-        } else {
+        if (hour < 0 || hour > 23 || min < 0 || min > 59) {
             channel.send(`0시 0분부터 23시 59분 사이로 설정해주세요.`);
+        } else {
+            server.resetSummary(hour, min);
+            channel.send(`**하루 정리**가 ${hour}시 ${min}분을 기준으로 동작합니다.`);
         }
     }
 
     private setSummary(message: Message) {
         const server = this.serverList.get(message.guildId);
         const channel = message.channel;
-        const summary = server.setSummary(channel);
 
-        if (summary === -1) {
-            channel.send(`**하루 정리**가 설정된 다른 채널이 있습니다.`);
-        } else if (summary === 0) {
-            channel.send(`이미 **하루 정리**가 설정된 채널입니다.`);
+        if (server.summary.job || server.summary.channelId) {
+            if (channel.id === server.summary.channelId) {
+                channel.send(`이미 **하루 정리**가 설정된 채널입니다.`);
+            } else {
+                channel.send(`**하루 정리**가 설정된 다른 채널이 있습니다.`);
+            }
         } else {
+            server.setSummary(channel.id, () => {this.summary(server, channel)});
             let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
             comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`
             channel.send(comment);
         }
     }
 
+    private summary(server: Server, channel: TextBasedChannels) {
+        const now = new Date();
+        const week = ['일','월','화','수','목','금','토'];
+        let comment = `:mega:  ${now.getMonth()+1}월 ${now.getDate()}일 ${week[now.getDay()]}요일 \n`;
+        
+        if (server.userList.size === 0) {
+            comment += `- 아직 참여한 사용자가 없습니다 -`;
+        } else {
+            server.userList.forEach((user, userId) => {
+                if (user.startTime) {
+                    user.pauseStopwatch();
+                    user.startTime = now;
+                }
+
+                comment += `<@${userId}> ${user.totalTime.getHours()}시간 ${user.totalTime.getMinutes()}분  `;
+                if (user.totalTime.getHours() >= server.goalHour) {
+                    comment += `:thumbsup:\n`;
+                } else {
+                    comment += `:bricks:\n`;
+                }
+                user.totalTime.setTime(new Date(2021, 0).getTime());
+            });
+        }
+        channel.send(comment);
+    }
+
     private clearSummary(message: Message) {
         const server = this.serverList.get(message.guildId);
         const channel = message.channel;
 
-        if (server.getSummaryChannelId() && channel.id !== server.getSummaryChannelId()) {
-            channel.send(`**하루 정리**를 설정한 채널에서 해제해주세요.`);
-        } else if (server.clearSummary()) {
-            channel.send(`**하루 정리**가 해제되었습니다.`);
+        if (server.summary.channelId && server.summary.job) {
+            if (channel.id === server.summary.channelId) {
+                server.clearSummary();
+                channel.send(`**하루 정리**가 해제되었습니다.`);
+            } else {
+                channel.send(`**하루 정리**를 설정한 채널에서 해제해주세요.`);
+            }
         } else {
-            channel.send(`**하루 정리**가 설정된 채널이 없습니다.`)
+            channel.send(`**하루 정리**가 설정된 채널이 없습니다.`);
         }
     }
 
@@ -280,12 +314,14 @@ export default class Bot {
         const channel = message.channel;
         const userId = message.author.id;
 
-        if (server.addUser(userId)) {
+        if (!server.hasUser(userId)) {
+            server.addUser(userId);
             channel.send(`<@${userId}> 새로운 스터디원을 환영합니다!  :partying_face:`);
         }
 
         const user = server.getUser(userId);
-        if (user.startStopwatch()) {
+        if (!user.startTime) {
+            user.startStopwatch();
             channel.send(`<@${userId}> 스톱워치 시작`);
         }
     }
@@ -296,7 +332,8 @@ export default class Bot {
         const userId = message.author.id;
 
         const user = server.getUser(userId);
-        if (user && user.pauseStopwatch()) {
+        if (server.hasUser(userId) && user.startTime) {
+            user.pauseStopwatch();
             channel.send(`<@${userId}> 스톱워치 멈춤`);
         }
     }
@@ -312,9 +349,9 @@ export default class Bot {
             return;
         }
 
-        const totalTime = user.getTotalTime();
+        const totalTime = user.getCurrentTotal();
         let comment = `<@${userId}> 오늘 하루  **${totalTime.getHours()}시간 ${totalTime.getMinutes()}분** `;
-        if (user.getStartTime()) {
+        if (user.startTime) {
             comment += `공부중  :book:`;
         } else {
             comment += `공부  :blue_book:`;
@@ -325,6 +362,6 @@ export default class Bot {
     private showGoalHour(message: Message) {
         const server = this.serverList.get(message.guildId);
         const channel = message.channel;
-        channel.send(`목표 공부시간은 **${server.getGoalHour()}시간**입니다.`);
+        channel.send(`목표 공부시간은 **${server.goalHour}시간**입니다.`);
     }
 }

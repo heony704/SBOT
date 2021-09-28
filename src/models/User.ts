@@ -1,44 +1,23 @@
 export default class User {
-    private startTime: Date;
-    private totalTime: Date;
-    // private brickCount: number;
+    public startTime: Date;
+    public totalTime: Date;
 
     constructor() {
         this.startTime = null;
         this.totalTime = new Date(2021, 0);
     }
 
-    public getStartTime(): Date {
-        return this.startTime;
+    public startStopwatch() {
+        this.startTime = new Date();
     }
 
-    public setStartTime(startTime: Date) {
-        this.startTime = startTime;
+    public pauseStopwatch() {
+        const now = new Date();
+        this.totalTime.setTime(this.totalTime.getTime() + (now.getTime() - this.startTime.getTime()));
+        this.startTime = null;
     }
 
-    public setTotalTime(totalTime: number) {
-        this.totalTime.setTime(totalTime);
-    }
-
-    public startStopwatch() :boolean {
-        if (!this.startTime) {
-            this.startTime = new Date();
-            return true;
-        }
-        return false;
-    }
-
-    public pauseStopwatch() :boolean {
-        if (this.startTime) {
-            const now = new Date();
-            this.totalTime.setTime(this.totalTime.getTime() + (now.getTime() - this.startTime.getTime()));
-            this.startTime = null;
-            return true;
-        }
-        return false;
-    }
-
-    public getTotalTime(): Date {
+    public getCurrentTotal(): Date {
         if (this.startTime) {
             const now = new Date();
             const tmp = new Date();

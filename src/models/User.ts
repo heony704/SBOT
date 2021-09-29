@@ -1,4 +1,4 @@
-export default class User {
+export class User {
     public startTime: Date;
     public totalTime: Date;
 

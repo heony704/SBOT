@@ -1,7 +1,7 @@
 import schedule from 'node-schedule';
-import User from './User';
+import { User } from './User';
 
-export default class Server {
+export class Server {
     public goalHour: number;
     public userList: Map <string, User>;
     public useKorean: boolean;

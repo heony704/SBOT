@@ -1,9 +1,9 @@
+import { config } from '../config';
 import { Guild, Message, TextBasedChannels } from 'discord.js';
-import Server from './Server';
-import config from '../config';
+import { Server } from './Server';
 import { help, guide, control } from '../info';
 
-export default class Bot {
+export class Bot {
     private id: string;
     private serverList: Map<string, Server>;
 

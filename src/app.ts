@@ -1,6 +1,6 @@
-import config from './config';
+import { config } from './config';
 import { Client, Intents } from 'discord.js';
-import Bot from './models/Bot';
+import { Bot } from './models/Bot';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
 const bot = new Bot();

@@ -10,9 +10,13 @@ client.on('ready', () => console.log(`${client.user.tag} is Ready !`));
 client.on('guildCreate', guild => {
     bot.addServer(guild.id);
     bot.createSbotCategory(guild);
+    console.log(`${guild.name} is added to serverlist.`)
 });
 
-client.on('guildDelete', guild => bot.deleteServer(guild.id));
+client.on('guildDelete', guild => {
+    bot.deleteServer(guild.id);
+    console.log(`${guild.name} is deleted from serverlist.`);
+});
 
 client.on('guildMemberRemove', member => bot.deleteUser(member.guild.id, member.user.id));
 

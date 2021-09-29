@@ -1,4 +1,3 @@
-import { config } from '../config';
 import { Guild, Message, TextBasedChannels } from 'discord.js';
 import { Server } from './Server';
 import { help, guide, control } from '../info';
@@ -7,9 +6,9 @@ export class Bot {
     private id: string;
     private serverList: Map<string, Server>;
 
-    constructor() {
+    constructor(id: string) {
         this.serverList = new Map();
-        this.id = config.id;
+        this.id = id;
     }
 
     public initServerList(guilds: Map<string, Guild>) {
@@ -20,6 +19,11 @@ export class Bot {
         console.log('Building Server List ...');
     }
 
+    public addServer(guildId: string) {
+        const server = new Server();
+        this.serverList.set(guildId, server);
+    }
+
     public deleteServer(guildId: string) {
         this.serverList.get(guildId).clearSummary();
         this.serverList.delete(guildId);
@@ -28,11 +32,6 @@ export class Bot {
     public deleteUser(guildId: string, userId: string) {
         const server = this.serverList.get(guildId);
         server.deleteUser(userId);
-    }
-
-    public addServer(guildId: string) {
-        const server = new Server();
-        this.serverList.set(guildId, server);
     }
 
     public checkSummary(guildId: string, channelId: string) {

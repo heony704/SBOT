@@ -3,7 +3,7 @@ import { Client, Intents } from 'discord.js';
 import { Bot } from './models/Bot';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
-const bot = new Bot();
+const bot = new Bot(config.id);
 
 client.on('ready', () => console.log(`${client.user.tag} is Ready !`));
 

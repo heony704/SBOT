@@ -36,13 +36,13 @@ export class Server {
         this.summary.job = schedule.scheduleJob(this.summary.cron, summary);
     }
 
-    private setSumamryTime(hour: number, min: number) {
+    private setSummaryTime(hour: number, min: number) {
         const utcHour = this.kstToUtc(hour);
         this.summary.cron = `0 ${min} ${utcHour} * * *`;
     }
 
     public editSummaryTime(hour: number, min: number) {
-        this.setSumamryTime(hour, min);
+        this.setSummaryTime(hour, min);
         if (this.summary.job) {
             schedule.rescheduleJob(this.summary.job, this.summary.cron);
         }

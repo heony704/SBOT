@@ -77,8 +77,8 @@ export class Bot {
         .then((category) => {
             channelManager.create('출석-체크', { type: 'GUILD_TEXT', parent: category.id, topic: '나 공부하러 왔다 ~ :wave:'})
             .then((channel) => {
-                channel.send('출석체크를 통해 공부의 시작을 알리세요. :sunglasses:');
-                channel.permissionOverwrites.create(this.id, {'VIEW_CHANNEL': false});
+                channel.send('출석체크를 통해 공부의 시작을 알리세요. :sunglasses:')
+                .then(() => channel.permissionOverwrites.create(this.id, {'VIEW_CHANNEL': false}));
             });
             channelManager.create('시간-체크', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT으로 공부시간 체크하자! :alarm_clock:'})
             .then((channel) => {
@@ -114,10 +114,12 @@ export class Bot {
             channelManager.create('수다는-적당히', { type: 'GUILD_TEXT', parent: category.id, topic: ':speaking_head:'})
             .then((channel) => {
                 channel.send('자유롭게 이야기할 수 있는 공간입니다.');
-            });
-            channelManager.create('감정-쓰레기통', { type: 'GUILD_TEXT', parent: category.id, topic: ':wastebasket:'})
-            .then((channel)=> {
-                channel.send('스트레스를 쏟아붓는 곳입니다. 자유롭게 사용하기 위해 채널 알림을 꺼주세요! :no_bell:');
+            }).then(() => {
+                channelManager.create('감정-쓰레기통', { type: 'GUILD_TEXT', parent: category.id, topic: ':wastebasket:'})
+                .then((channel)=> {
+                    channel.send('스트레스를 쏟아붓는 곳입니다. 자유롭게 사용하기 위해 채널 알림을 꺼주세요! :no_bell:');
+                });
+            }).then(() => {
                 category.permissionOverwrites.create(this.id, {'VIEW_CHANNEL': false});
             });
         });

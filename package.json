@@ -1,6 +1,6 @@
 {
   "name": "sbot",
-  "version": "2.0",
+  "version": "2.1",
   "description": "discord bot for camera study.",
   "main": "dist/index.js",
   "scripts": {

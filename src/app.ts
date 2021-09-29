@@ -1,18 +1,22 @@
-import config from './config';
+import { config } from './config';
 import { Client, Intents } from 'discord.js';
-import Bot from './models/Bot';
+import { Bot } from './models/Bot';
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS] });
-const bot = new Bot();
+const bot = new Bot(config.id);
 
 client.on('ready', () => console.log(`${client.user.tag} is Ready !`));
 
 client.on('guildCreate', guild => {
     bot.addServer(guild.id);
     bot.createSbotCategory(guild);
+    console.log(`${guild.name} is added to serverlist.`)
 });
 
-client.on('guildDelete', guild => bot.deleteServer(guild.id));
+client.on('guildDelete', guild => {
+    bot.deleteServer(guild.id);
+    console.log(`${guild.name} is deleted from serverlist.`);
+});
 
 client.on('guildMemberRemove', member => bot.deleteUser(member.guild.id, member.user.id));
 

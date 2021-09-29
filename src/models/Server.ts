@@ -1,118 +1,61 @@
-import { TextBasedChannels } from 'discord.js';
 import schedule from 'node-schedule';
-import User from './User';
+import { User } from './User';
 
-export default class Server {
-    private goalHour: number;
-    private userList: Map <string, User>;
+export class Server {
+    public goalHour: number;
+    public userList: Map <string, User>;
     public useKorean: boolean;
-    private summary: {channelId: string, job: schedule.Job};
+    public summary: {channelId: string, job: schedule.Job, cron: string};
 
     constructor() {
         this.goalHour = 6;
         this.userList = new Map();
         this.useKorean = false;
-        this.summary = {channelId: null, job: null};
-    }
-    
-    public addUser(userId: string): boolean {
-        if (this.userList.has(userId)) return false;
-
-        const user = new User();
-        this.userList.set(userId, user);
-        return true;
+        this.summary = {channelId: null, job: null, cron: '0 0 15 * * *'};
     }
 
-    private hasUser(userId: string): boolean {
+    public hasUser(userId: string): boolean {
         return this.userList.has(userId);
     }
 
     public getUser(userId: string): User {
-        if (this.hasUser(userId)) {
-            return this.userList.get(userId);
-        } else {
-            return null;
-        }
+        return this.userList.get(userId);
     }
 
-    public deleteUser(userId: string): boolean {
-        if (!this.hasUser(userId)) return false;
+    public addUser(userId: string) {
+        const user = new User();
+        this.userList.set(userId, user);
+    }
 
+    public deleteUser(userId: string) {
         this.userList.delete(userId);
-        return true;
     }
 
-    public getSummaryChannelId(): string {
-        return this.summary.channelId;
+    public setSummary(channelId: string, summary: schedule.JobCallback) {
+        this.summary.channelId = channelId;
+        this.summary.job = schedule.scheduleJob(this.summary.cron, summary);
     }
 
-    public getGoalHour(): number {
-        return this.goalHour;
+    private setSummaryTime(hour: number, min: number) {
+        const utcHour = this.kstToUtc(hour);
+        this.summary.cron = `0 ${min} ${utcHour} * * *`;
     }
 
-    public setGoalHour(hour: number): boolean {
-        if (hour < 0) return false;
-        
-        this.goalHour = hour;
-        return true;
-    }
-
-    public setSummary(channel: TextBasedChannels): number {
-        if (channel.id === this.summary.channelId) {
-            return 0;
+    public editSummaryTime(hour: number, min: number) {
+        this.setSummaryTime(hour, min);
+        if (this.summary.job) {
+            schedule.rescheduleJob(this.summary.job, this.summary.cron);
         }
-        if (this.summary.job || this.summary.channelId) {
-            return -1;
-        }
-        this.summary.channelId = channel.id;
-        this.summary.job = schedule.scheduleJob('0 0 15 * * *', () => {
-
-            const now = new Date();
-            const week = ['일','월','화','수','목','금','토'];
-            let comment = `:mega:  ${now.getMonth()+1}월 ${now.getDate()}일 ${week[now.getDay()]}요일 \n`;
-            
-            if (this.userList.size === 0) {
-                comment += `- 아직 참여한 사용자가 없습니다 -`;
-            } else {
-                this.userList.forEach((user, userId) => {
-                    if (user.pauseStopwatch()) {
-                        user.setStartTime(now);
-                    }
-
-                    comment += `<@${userId}> ${user.getTotalTime().getHours()}시간 ${user.getTotalTime().getMinutes()}분  `;
-                    if (user.getTotalTime().getHours() >= this.goalHour) {
-                        comment += `:thumbsup:\n`;
-                    } else {
-                        comment += `:bricks:\n`;
-                    }
-                    user.setTotalTime(new Date(2021, 0).getTime());
-                });
-            }
-            channel.send(comment);
-        });
-        return 1;
     }
 
-    public resetSummary(hour: number, min:number): boolean {
-        if (hour < 0 || hour > 23 || min < 0 || min > 59) return false;
-
-        let correctHour = 0;
-        if (hour >= 9) {
-            correctHour = hour - 9;
-        } else {
-            correctHour = hour + 15;
-        }
-        const summaryTime = `0 ${min} ${correctHour} * * *`;
-        schedule.rescheduleJob(this.summary.job, summaryTime);
-        return true;
+    private kstToUtc(hour: number) {
+        if (hour >= 9) return hour - 9;
+        else return hour + 15;
     }
 
-    public clearSummary(): boolean {
-        if (!this.summary.job) return false;
-
+    public clearSummary() {
         schedule.cancelJob(this.summary.job);
         this.summary.channelId = null;
         this.summary.job = null;
-        return true;
     }
 }

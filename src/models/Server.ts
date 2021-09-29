@@ -5,13 +5,13 @@ export class Server {
     public goalHour: number;
     public userList: Map <string, User>;
     public useKorean: boolean;
-    public summary: {channelId: string, job: schedule.Job};
+    public summary: {channelId: string, job: schedule.Job, cron: string};
 
     constructor() {
         this.goalHour = 6;
         this.userList = new Map();
         this.useKorean = false;
-        this.summary = {channelId: null, job: null};
+        this.summary = {channelId: null, job: null, cron: '0 0 15 * * *'};
     }
 
     public hasUser(userId: string): boolean {
@@ -33,13 +33,19 @@ export class Server {
 
     public setSummary(channelId: string, summary: Function) {
         this.summary.channelId = channelId;
-        this.summary.job = schedule.scheduleJob('0 0 15 * * *', () => summary);
+        this.summary.job = schedule.scheduleJob(this.summary.cron, () => summary);
     }
 
-    public resetSummary(hour: number, min: number) {
+    private setSumamryTime(hour: number, min: number) {
         const utcHour = this.kstToUtc(hour);
-        const summaryTime = `0 ${min} ${utcHour} * * *`;
-        schedule.rescheduleJob(this.summary.job, summaryTime);
+        this.summary.cron = `0 ${min} ${utcHour} * * *`;
+    }
+
+    public editSummaryTime(hour: number, min: number) {
+        this.setSumamryTime(hour, min);
+        if (this.summary.job) {
+            schedule.rescheduleJob(this.summary.job, this.summary.cron);
+        }
     }
 
     private kstToUtc(hour: number) {

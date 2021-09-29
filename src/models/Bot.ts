@@ -221,7 +221,7 @@ export class Bot {
         if (hour < 0 || hour > 23 || min < 0 || min > 59) {
             channel.send(`0시 0분부터 23시 59분 사이로 설정해주세요.`);
         } else {
-            server.resetSummary(hour, min);
+            server.editSummaryTime(hour, min);
             channel.send(`**하루 정리**가 ${hour}시 ${min}분을 기준으로 동작합니다.`);
         }
     }

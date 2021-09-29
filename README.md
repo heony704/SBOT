@@ -66,7 +66,7 @@ npm install
 src 폴더 안의 config.example.ts를 수정하여 아래와 같은 config.ts 파일을 만드세요.  
 config.ts 파일은 src 폴더 안에 있어야 합니다.
 ```tsx
-export default {
+export const config = {
     token : 'enterYourBotTokenHere',
     id : 'enterYourBotIdHere'
 }

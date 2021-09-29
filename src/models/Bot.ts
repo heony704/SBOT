@@ -102,7 +102,7 @@ export class Bot {
             })
             .then((channel) => {
                 if (server.summary.job || server.summary.channelId) server.clearSummary();
-                server.setSummary(channel.id, this.summary);
+                server.setSummary(channel.id, () => {this.summary(server, channel)});
                 let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
                 comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`;
                 channel.send(comment);

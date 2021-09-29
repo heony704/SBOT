@@ -31,9 +31,9 @@ export class Server {
         this.userList.delete(userId);
     }
 
-    public setSummary(channelId: string, summary: Function) {
+    public setSummary(channelId: string, summary: schedule.JobCallback) {
         this.summary.channelId = channelId;
-        this.summary.job = schedule.scheduleJob(this.summary.cron, () => summary);
+        this.summary.job = schedule.scheduleJob(this.summary.cron, summary);
     }
 
     private setSumamryTime(hour: number, min: number) {

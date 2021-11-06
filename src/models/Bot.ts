@@ -172,8 +172,8 @@ export class Bot {
             case 'pause':
             case 'p':
                 return this.pauseStopwatch(message);
-            case 'time':
-            case 't':
+            case 'hour':
+            case 'h':
                 return this.showTotalTime(message);
             case 'goal':
             case 'g':
@@ -184,7 +184,7 @@ export class Bot {
             case 'ㅔ':
                 if (server.useKorean === true) this.pauseStopwatch(message);
                 return;
-            case 'ㅅ':
+            case 'ㅗ':
                 if (server.useKorean === true) this.showTotalTime(message);
                 return;
             case 'ㅎ':

@@ -1,6 +1,6 @@
 import { Guild, Message, TextBasedChannels } from 'discord.js';
 import { Server } from './Server';
-import { help, guide, control } from '../info';
+import { help, guide } from '../info';
 
 export class Bot {
     private id: string;
@@ -41,9 +41,10 @@ export class Bot {
         }
     }
 
-    public createSbotCategory(guild: Guild) {
+    public async createSbotCategory(guild: Guild) {
         const channelManager = guild.channels;
-        channelManager.create('SBOT', {
+
+        const category = await channelManager.create('SBOT', {
             type: 'GUILD_CATEGORY', 
             permissionOverwrites: [
                 { 
@@ -55,74 +56,58 @@ export class Bot {
                     allow: ['VIEW_CHANNEL']
                 }
             ]
-        })
-        .then((category) => {
-            channelManager.create('봇-안내', { type: 'GUILD_TEXT', parent:category.    id, topic: 'SBOT 안내 채널입니다.'})
-            .then((channel) => {
-                channel.send(guide);
-            });
-
-            channelManager.create('봇-관리', { type: 'GUILD_TEXT', parent:category.    id, topic: 'SBOT 관리 채널입니다.'})
-            .then((channel) => {
-                channel.send(control);
-            });
         });
+
+        const channel = await channelManager.create('봇-안내', { type: 'GUILD_TEXT', parent:category.    id, topic: 'SBOT 안내 채널입니다.'});
+        await channel.send(guide);
     }
 
-    private createStudyCategory(guild: Guild) {
+    private async createStudyCategory(guild: Guild) {
         const channelManager = guild.channels;
         const server = this.serverList.get(guild.id);
 
-        channelManager.create('공부-채널', { type: 'GUILD_CATEGORY'})
-        .then((category) => {
-            channelManager.create('출석-체크', { type: 'GUILD_TEXT', parent: category.id, topic: '나 공부하러 왔다 ~ :wave:'})
-            .then((channel) => {
-                channel.send('출석체크를 통해 공부의 시작을 알리세요. :sunglasses:')
-                .then(() => channel.permissionOverwrites.create(this.id, {'VIEW_CHANNEL': false}));
-            });
-            channelManager.create('시간-체크', { type: 'GUILD_TEXT', parent: category.id, topic: 'SBOT으로 공부시간 체크하자! :alarm_clock:'})
-            .then((channel) => {
-                channel.send('`start` 로 스톱워치를 시작하세요! `help` 를 통해 사용가능한 명령어를 확인할 수 있습니다.\n채널 알림을 꺼두는 것을 추천합니다. :no_bell:');
-                channel.send(help);
-            });
-            channelManager.create('하루-정리', { 
-                type: 'GUILD_TEXT', 
-                parent: category.id, 
-                topic: '오늘 따봉:thumbsup:을 받을까, 벽돌:bricks:을 받을까?', 
-                permissionOverwrites: [
-                    {
-                        id: guild.roles.everyone,
-                        deny: ['SEND_MESSAGES']
-                    },
-                    {
-                        id: this.id,
-                        allow: ['SEND_MESSAGES']
-                    }
-                ]
-            })
-            .then((channel) => {
-                if (server.summary.job || server.summary.channelId) server.clearSummary();
-                server.setSummary(channel.id, () => {this.summary(server, channel)});
-                let comment = `해당 채널에 **하루 정리**가 설정되었습니다.\n`;
-                comment += `목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`;
-                channel.send(comment);
-            });
-            channelManager.create('캠-스터디', { type: 'GUILD_VOICE', parent: category.id});
+        const studyCategory = await channelManager.create('공부-채널', { type: 'GUILD_CATEGORY'});
+
+        const attendChannel = await channelManager.create('출석-체크', { type: 'GUILD_TEXT', parent: studyCategory.id, topic: '나 공부하러 왔다 ~ :wave:'});
+        await attendChannel.send('출석체크를 통해 공부의 시작을 알리세요. :sunglasses:');
+        attendChannel.permissionOverwrites.create(this.id, {'VIEW_CHANNEL': false});
+
+        const watchChannel = await channelManager.create('시간-체크', { type: 'GUILD_TEXT', parent: studyCategory.id, topic: 'SBOT으로 공부시간 체크하자! :alarm_clock:'});
+        watchChannel.send('`start` 로 스톱워치를 시작하세요! `help` 를 통해 사용가능한 명령어를 확인할 수 있습니다.\n채널 알림을 꺼두는 것을 추천합니다. :no_bell:');
+        watchChannel.send(help);
+
+        const summaryChannel = await channelManager.create('하루-정리', { 
+            type: 'GUILD_TEXT', 
+            parent: studyCategory.id, 
+            topic: '오늘 따봉:thumbsup:을 받을까, 벽돌:bricks:을 받을까?', 
+            permissionOverwrites: [
+                {
+                    id: guild.roles.everyone,
+                    deny: ['SEND_MESSAGES']
+                },
+                {
+                    id: this.id,
+                    allow: ['SEND_MESSAGES']
+                }
+            ]
         });
-        channelManager.create('사담-채널', { type: 'GUILD_CATEGORY'})
-        .then((category) => {
-            channelManager.create('수다는-적당히', { type: 'GUILD_TEXT', parent: category.id, topic: ':speaking_head:'})
-            .then((channel) => {
-                channel.send('자유롭게 이야기할 수 있는 공간입니다.');
-            }).then(() => {
-                channelManager.create('감정-쓰레기통', { type: 'GUILD_TEXT', parent: category.id, topic: ':wastebasket:'})
-                .then((channel)=> {
-                    channel.send('스트레스를 쏟아붓는 곳입니다. 자유롭게 사용하기 위해 채널 알림을 꺼주세요! :no_bell:');
-                });
-            }).then(() => {
-                category.permissionOverwrites.create(this.id, {'VIEW_CHANNEL': false});
-            });
-        });
+        if (server.summary.job || server.summary.channelId) server.clearSummary();
+        server.setSummary(summaryChannel.id, () => {this.summary(server, summaryChannel)});
+        let comment = `해당 채널에 **하루 정리**가 설정되었습니다.
+        목표 시간을 달성하면 따봉:thumbsup:을 , 달성하지 못한다면 벽돌:bricks:을 받습니다.`;
+        summaryChannel.send(comment);
+        
+        channelManager.create('캠-스터디', { type: 'GUILD_VOICE', parent: studyCategory.id});
+
+        const etcCategory = await channelManager.create('사담-채널', { type: 'GUILD_CATEGORY'});
+
+        const talkChannel = await channelManager.create('수다는-적당히', { type: 'GUILD_TEXT', parent: etcCategory.id, topic: ':speaking_head:'});
+        await talkChannel.send('자유롭게 이야기할 수 있는 공간입니다.');
+
+        const trashChannel = await channelManager.create('감정-쓰레기통', { type: 'GUILD_TEXT', parent: etcCategory.id, topic: ':wastebasket:'});
+        await trashChannel.send('스트레스를 쏟아붓는 곳입니다. 자유롭게 사용하기 위해 채널 알림을 꺼주세요! :no_bell:');
+
+        await etcCategory.permissionOverwrites.create(this.id, {'VIEW_CHANNEL': false});
     }
 
     public processCommand(message: Message) {
